@@ -1,0 +1,792 @@
+define category singleton "$\bullet$"
+define category Fa "$\mc F(a)$"
+define category Fb "$\mc F(b)$"
+define category Fb2 "$\mc F(b\times_a b)$"
+define category Fb3 "$\mc F(b\times_a b\times_a b)$"
+define functor fb "$f^\ast$"
+    source : Fa
+    target : Fb
+define functor ff "$f_\ast$"
+    source : Fb
+    target : Fa
+define functor x "$x$"
+    source : singleton
+    target : Fb
+define natural transformation f-unit "$\eta_f$"
+    source : Fb \\
+    target : ff & fb \\
+define natural transformation f-counit "$\epsilon_f$"
+    source : fb & ff \\
+    target : Fa \\
+define functor p1b "$p_1^\ast$"
+    source : Fb 
+    target : Fb2
+define functor p1f "$p_{1\ast}$"
+    source : Fb2
+    target : Fb
+define functor p2b "$p_2^\ast$"
+    source : Fb
+    target : Fb2
+define functor p2f "$p_{2\ast}$"
+    source : Fb2
+    target : Fb
+define natural transformation desc-iso "$\beta$"
+    source : x & p1b \\
+    target : x & p2b \\
+define natural transformation desc-iso-inv "$\beta'$"
+    source : x & p2b \\
+    target : x & p1b \\
+define natural transformation p2-unit "$\eta_{p_2}$"
+    source : Fb2 \\
+    target : p2f & p2b \\
+define natural transformation p2-counit "$\epsilon_{p_2}$"
+    source : p2b & p2f \\
+    target : Fb \\
+define functor T "$T$"
+    source : Fb 
+    target : Fb
+define natural transformation mult-T "$\alpha$"
+    source : x & T \\
+    target : x \\
+define natural transformation mult-ff "$\alpha$"
+    source : x & ff & fb \\
+    target : x \\
+define natural transformation pp-p1p2-ff-T "$\PP^{p_1,p_2}_{f,f}$"
+    source : p1b & p2f \\
+    target : T \\
+define natural transformation fp1b-fp2b-iso "$\cong$"
+    source : fb & p1b \\
+    target : fb & p2b \\
+define natural transformation fp2b-fp1b-iso "$\cong$"
+    source : fb & p2b \\
+    target : fb & p1b \\
+define functor pi1b "$\pi_1^\ast$"
+    source : Fb
+    target : Fb3
+define functor pi2b "$\pi_2^\ast$"
+    source : Fb 
+    target : Fb3
+define functor pi3b "$\pi_3^\ast$"
+    source : Fb
+    target : Fb3
+define natural transformation tau12 "$\tau_{12}$"
+    source : x & pi1b \\
+    target : x & pi2b \\
+define natural transformation tau23 "$\tau_{23}$"
+    source : x & pi2b \\
+    target : x & pi3b \\
+define natural transformation tau13 "$\tau_{13}$"
+    source : x & pi1b \\
+    target : x & pi3b \\
+define natural transformation fpi1b-fpi2b-iso "$\cong$"
+    source : fb & pi1b \\
+    target : fb & pi2b \\
+define natural transformation fpi2b-fpi3b-iso "$\cong$"
+    source : fb & pi2b \\
+    target : fb & pi3b \\
+define natural transformation fpi1b-fpi3b-iso "$\cong$"
+    source : fb & pi1b \\
+    target : fb & pi3b \\
+
+draw desc-iso.tex
+    n : desc-iso \\
+draw desc-iso-inv.tex
+    n : desc-iso-inv \\
+draw algebra-to-desc-def-1.tex [y=0.7cm]
+    f : x & & p1b & & \\
+    n :  & & p2-unit \\
+    f : x & & p1b & p2f & p2b \\
+    n :  & pp-p1p2-ff-T & \\
+    f : x & & T & & p2b \\
+    n : mult-T & \\
+    f :  & x & & & p2b \\
+draw algebra-to-desc-def-2.tex [y=0.7cm]
+    f : x & & & p1b\\
+    n :  & f-unit & & p2-unit \\
+    f : x & ff & fb & p1b & p2f & p2b \\
+    n :  & & fp1b-fp2b-iso &  & \\
+    f : x & ff & fb & p2b & p2f & p2b\\
+    n : mult-ff & p2-counit & \\
+    f : & x & & & & p2b \\
+draw algebra-to-desc-def-3.tex [y=0.7cm]
+    f : x & & & p1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & p1b \\
+    n :  & & fp1b-fp2b-iso \\
+    f : x & ff & fb & p2b \\
+    n : mult-ff & \\
+    f : & x & & p2b \\
+draw algebra-to-desc-inv-def-3.tex [y=0.7cm]
+    f : x & & & p2b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & p2b \\
+    n :  & & fp2b-fp1b-iso \\
+    f : x & ff & fb & p1b \\
+    n : mult-ff & \\
+    f : & x & & p1b \\
+draw desc-iso-inv-comp-1.tex
+    n : desc-iso \\
+    n : desc-iso-inv \\
+draw desc-iso-inv-comp-2.tex [y=0.6cm]
+    f : x & & & & p1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & & p1b \\
+    n :  & & fp1b-fp2b-iso \\
+    f : x & ff & fb & & p2b \\
+    n : mult-ff & \\
+    f :   & x & & & p2b \\
+    n :  & f-unit & \\
+    f :   & x & ff & fb & p2b \\
+    n :  & & fp2b-fp1b-iso \\
+    f :   & x & ff & fb & p1b \\
+    n : mult-ff & \\
+    f :  & & x & & p1b \\
+draw desc-iso-inv-comp-3.tex [y=0.6cm]
+    f : x &    &    & & & p1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & & & p1b \\
+    n :  & & fp1b-fp2b-iso \\
+    f : x & ff & fb & & & p2b \\
+    n :  & & & f-unit & \\
+    f : x & ff & fb & ff & fb & p2b \\
+    n :  & & f-counit & & \\
+    f : x & ff &    &    & fb & p2b \\
+    n :  & & fp2b-fp1b-iso \\
+    f : x & ff &    &    & fb & p1b \\
+    n :  mult-ff & \\
+    f :  & & x & & & p1b \\
+draw desc-iso-inv-comp-4.tex [y=0.7cm]
+    f : x & & & p1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & p1b \\
+    n :  & & fp1b-fp2b-iso \\
+    f : x & ff & fb & p2b \\
+    n :  & & fp2b-fp1b-iso \\
+    f : x & ff & fb & p1b \\
+    n :  mult-ff & \\
+    f :  & x & & p1b \\
+draw desc-iso-inv-comp-5.tex [y=0.7cm]
+    f : x & & & p1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & p1b \\
+    n :  & & & \\
+    f : x & ff & fb & p1b \\
+    n : mult-ff & \\
+    f : & x & & p1b \\
+draw desc-iso-inv-comp-6.tex [y=0.7cm]
+    f : x & p1b \\
+    n : & \\
+    n : & \\
+    n : & \\
+draw tau12-tau23-comp.tex
+    n : tau12 \\
+    n : tau23 \\
+draw tau12-tau23-comp-eq-1.tex [y=0.6cm]
+    f : x & & & & pi1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & & pi1b \\
+    n :  & & fpi1b-fpi2b-iso \\
+    f : x & ff & fb & & pi2b \\
+    n : mult-ff & \\
+    f :   & x & & & pi2b \\
+    n : & f-unit & \\
+    f :   & x & ff & fb & pi2b \\
+    n : & & fpi2b-fpi3b-iso \\
+    f : & x & ff & fb & pi3b \\
+    n : mult-ff & \\
+    f : &   & x & & pi3b \\
+draw tau12-tau23-comp-eq-2.tex [y=0.6cm]
+    f : x &    &    & & & pi1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & & & pi1b \\
+    n :  & & fpi1b-fpi2b-iso \\
+    f : x & ff & fb & & & pi2b \\
+    n :  & & & f-unit & \\
+    f : x & ff & fb & ff & fb & pi2b \\
+    n :  & & f-counit & & \\
+    f : x & ff &    &    & fb & pi2b \\
+    n :  & & fpi2b-fpi3b-iso \\
+    f : x & ff &    &    & fb & pi3b \\
+    n :  mult-ff & \\
+    f :  & & x & & & pi3b \\
+draw tau12-tau23-comp-eq-3.tex [y=0.7cm]
+    f : x & & & pi1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & pi1b \\
+    n :  & & fpi1b-fpi2b-iso \\
+    f : x & ff & fb & pi2b \\
+    n :  & & fpi2b-fpi3b-iso \\
+    f : x & ff & fb & pi3b \\
+    n :  mult-ff & \\
+    f :  & x & & pi3b \\
+draw tau12-tau23-comp-eq-4.tex [y=0.7cm]
+    f : x & & & pi1b \\
+    n :  & f-unit & \\
+    f : x & ff & fb & pi1b \\
+    n :  & & fpi1b-fpi3b-iso \\
+    f : x & ff & fb & pi3b \\
+    n : mult-ff & \\
+    f : & x & & pi3b \\
+draw tau13.tex 
+    n : tau13 \\
+
+define functor y "$y$"
+    source : singleton 
+    target : Fa
+define functor fb-y "$f^\ast y$"
+    source : singleton
+    target : Fb
+define natural transformation mult-fb-y "$\alpha$"
+    source : fb-y & T \\
+    target : fb-y \\
+define natural transformation mult-fb-y-expand "$\alpha$"
+    source : fb-y & ff & fb \\
+    target : fb-y \\
+draw mult-fb-y.tex [x=0.7cm]
+    f : fb-y & & T \\
+    n : mult-fb-y \\
+    f :  & fb-y & \\
+draw mult-fb-y-def.tex 
+    f : y & fb & ff & fb \\
+    n :  & f-counit & \\
+    f : & y & fb & \\
+draw fby-to-desc-eq-1.tex [y=0.7cm]
+    f : fb-y & & & p1b \\
+    n :  & f-unit & \\
+    f : fb-y & ff & fb & p1b \\
+    n :  & & fp1b-fp2b-iso \\
+    f : fb-y & ff & fb & p2b \\
+    n : mult-fb-y-expand & \\
+    f : & fb-y & & p2b \\
+draw fby-to-desc-eq-2.tex [y=0.7cm]
+    f : y & fb & & & p1b \\
+    n :  & & f-unit & \\
+    f : y & fb & ff & fb & p1b \\
+    n :  & & & fp1b-fp2b-iso \\
+    f : y & fb & ff & fb & p2b \\
+    n : & f-counit &  & \\
+    f :  & y & fb & & p2b \\
+draw fby-to-desc-eq-3.tex [y=0.7cm]
+    f : y & fb & p1b \\
+    n :  & & \\
+    n : & fp1b-fp2b-iso \\
+    n :  & & \\
+
+define natural transformation gamma "$\gamma$"
+    source : x & p1b & p2f \\
+    target : x \\
+define functor Deltab "$\Delta^\ast$"
+    source : Fb2
+    target : Fb
+define functor Deltaf "$\Delta_\ast$"
+    source : Fb
+    target : Fb2
+define natural transformation Fb-p1Deltab-iso "$\cong$"
+    source : Fb \\
+    target : p1b & Deltab \\
+define natural transformation p2Deltab-Fb-iso "$\cong$"
+    source : p2b & Deltab \\
+    target : Fb \\
+draw gamma-axiom-1-eq-1.tex [y=0.7cm]
+    f : x & & & & \\
+    n :  & Fb-p1Deltab-iso \\
+    f : x & p1b & & & Deltab \\
+    n :  & & p2-unit & \\
+    f : x & p1b & p2f & p2b & Deltab \\
+    n : gamma & p2Deltab-Fb-iso \\
+    f : & x & & & \\
+draw gamma-axiom-1-eq-2.tex [y=0.7cm]
+    f : x \\
+    n : \\
+    n : \\
+    n : \\
+define functor pi12b "$\pi_{12}^\ast$"
+    source : Fb2
+    target : Fb3
+define functor pi23b "$\pi_{23}^\ast$"
+    source : Fb2
+    target : Fb3
+define functor pi23f "$\pi_{23\ast}$"
+    source : Fb3
+    target : Fb2
+define functor pi13b "$\pi_{13}^\ast$"
+    source : Fb2
+    target : Fb3
+define functor pi13f "$\pi_{13\ast}$"
+    source : Fb3
+    target : Fb2
+define natural transformation pi13-counit "$\epsilon_{\pi_{13}}$"
+    source : pi13b & pi13f \\
+    target : Fb2 \\
+define natural transformation PP-pi12pi23-p2p1 "$\PP^{\pi_{12},\pi_{23}}_{p_2,p_1}$"
+    source : pi12b & pi23f \\
+    target : p2f & p1b \\
+define natural transformation p1pi12b-p1pi13b-iso "$\cong$"
+    source : p1b & pi12b \\
+    target : p1b & pi13b \\
+define natural transformation pi23p2f-pi13p2f-iso "$\cong$"
+    source : pi23f & p2f \\
+    target : pi13f & p2f \\
+draw gamma-axiom-2-eq-1.tex 
+    f : x & p1b & pi12b & & pi23f & p2f \\
+    n :  & & PP-pi12pi23-p2p1 & \\
+    f : x & p1b & p2f & p1b & & p2f \\
+    n : gamma & & \\
+    f :  & x & & p1b & & p2f \\
+    n : gamma  \\
+    f : & & & x & & \\
+draw gamma-axiom-2-eq-2.tex
+    f : x & p1b & pi12b & pi23f & p2f \\
+    n : & p1pi12b-p1pi13b-iso & pi23p2f-pi13p2f-iso \\
+    f : x & p1b & pi13b & pi13f & p2f \\
+    n :  & & pi13-counit & \\
+    f : x & p1b & & & p2f \\
+    n : gamma \\
+    f :    & & x & & \\
+draw gamma.tex [x=0.8cm]
+    n : gamma \\
+    f : & x & \\
+draw desc-to-gamma-def.tex [y=0.8cm]
+    f : x & p1b & p2f \\
+    n : desc-iso & \\
+    f : x & p2b & p2f \\
+    n :  & p2-counit \\
+    f : x \\
+draw descent-id-1.tex [y=0.6cm]
+    f : x & & \\
+    n :  & Fb-p1Deltab-iso  \\
+    f : x & p1b & Deltab \\
+    n : desc-iso & \\
+    f : x & p2b & Deltab \\
+    n :  & p2Deltab-Fb-iso \\
+    f : x & & \\
+draw descent-id-2.tex [y=0.6cm]
+    f : x \\
+    n : \\
+    n : \\
+    n : \\
+
+define functor Db "$D^\ast$"
+    source : Fb3
+    target : Fb
+define functor piib "$\pi_i^\ast$"
+    source : Fb
+    target : Fb3
+define functor pijb "$\pi_j^\ast$"
+    source : Fb
+    target : Fb3
+define functor piijb "$\pi_{ij}^\ast$"
+    source : Fb2
+    target : Fb3
+define natural transformation Fb-piiDb-iso "$\cong$"
+    source : Fb \\
+    target : piib & Db \\
+define natural transformation piib-p1piijb-iso "$\cong$"
+    source : piib \\
+    target : p1b & piijb \\
+define natural transformation piijDb-Deltab-iso "$\cong$"
+    source : piijb & Db\\
+    target : Deltab \\
+define natural transformation Deltab-piijDb-iso "$\cong$"
+    source : Deltab \\
+    target : piijb & Db \\
+define natural transformation p2piijb-pijb-iso "$\cong$"
+    source : p2b & piijb \\
+    target : pijb \\
+define natural transformation pijDb-Fb-iso "$\cong$"
+    source : pijb & Db \\
+    target : Fb \\
+draw descent-id-ij-1.tex [y=0.5cm]
+    f : x & & & & \\
+    n :  & Fb-piiDb-iso \\
+    f : x & & piib &  & Db \\
+    n :  & piib-p1piijb-iso & \\
+    f : x & p1b & piijb &  & Db \\
+    n :  & & piijDb-Deltab-iso \\
+    f : x & p1b & & Deltab & \\
+    n :  desc-iso &  \\
+    f : x & p2b & & Deltab & \\
+    n :  & & Deltab-piijDb-iso \\
+    f : x & p2b & piijb & & Db \\
+    n :  & p2piijb-pijb-iso &  \\
+    f : x & & pijb & & Db \\
+    n :  & pijDb-Fb-iso \\
+    f : x & & & & \\
+draw descent-id-ij-2.tex [y=0.5cm]
+    f : x & & & \\
+    n :  & Fb-piiDb-iso \\
+    f : x & & piib & Db \\
+    n :  & piib-p1piijb-iso & \\
+    f : x & p1b & piijb & Db \\
+    n :  desc-iso & piijb & Db \\
+    f : x & p2b & piijb & Db\\
+    n :  & p2piijb-pijb-iso  & \\
+    f : x & & pijb & Db \\
+    n :  & pijDb-Fb-iso \\
+    f : x & & & \\
+draw descent-id-ij-component-1.tex [x=0.6cm]
+    n : Fb-p1Deltab-iso \\
+    f : p1b & & Deltab \\
+draw descent-id-ij-component-2.tex [y=0.7cm]
+    f : Fb \\
+    n : Fb-piiDb-iso \\
+    f :  & piib & & Db \\
+    n : piib-p1piijb-iso & \\
+    f :  p1b & piijb & & Db\\
+    n : & piijDb-Deltab-iso \\
+    f : p1b & & Deltab & \\
+draw descent-id-double-comp-1.tex [y=0.5cm]
+    f : x & & \\
+    n :  & Fb-p1Deltab-iso \\
+    f : x & p1b & Deltab \\
+    n :  desc-iso & \\
+    f : x & p2b & Deltab \\
+    n :  & p2Deltab-Fb-iso \\
+    f : x & & \\
+    n :  & Fb-p1Deltab-iso \\
+    f : x & p1b & Deltab \\
+    n :  desc-iso & \\
+    f : x & p2b & Deltab \\
+    n :  & p2Deltab-Fb-iso \\
+    f : x & & \\
+define natural transformation Fb-pi1Db-iso "$\cong$"
+    source : Fb \\
+    target : pi1b & Db \\
+define natural transformation pi1b-p1pi12b-iso "$\cong$"
+    source : pi1b \\
+    target : p1b & pi12b \\
+define natural transformation p2pi12b-pi2b-iso "$\cong$"
+    source : p2b & pi12b \\
+    target : pi2b\\
+define natural transformation Fb-pi2Db-iso "$\cong$"
+    source : Fb \\
+    target : pi2b & Db \\
+define natural transformation pi2b-p1pi23b-iso "$\cong$"
+    source : pi2b \\
+    target : p1b & pi23b \\
+define natural transformation p2pi23b-pi3b-iso "$\cong$"
+    source : p2b & pi23b \\
+    target : pi3b\\
+define natural transformation pi2Db-Fb-iso "$\cong$"
+    source : pi2b & Db \\
+    target : Fb \\
+define natural transformation pi3Db-Fb-iso "$\cong$"
+    source : pi3b & Db \\
+    target : Fb \\
+draw descent-id-double-comp-2.tex [y=0.4cm]
+    f : x & & & \\
+    n :  & Fb-pi1Db-iso \\
+    f : x & & pi1b & Db \\
+    n :  & pi1b-p1pi12b-iso & \\
+    f : x & p1b & pi12b & Db \\
+    n :  desc-iso & & \\
+    f : x & p2b & pi12b & Db\\
+    n :  & p2pi12b-pi2b-iso  & \\
+    f : x & & pi2b & Db \\
+    n :  & pi2Db-Fb-iso \\
+    f : x & & & \\
+    n :  & Fb-pi2Db-iso \\
+    f : x & & pi2b & Db \\
+    n :  & pi2b-p1pi23b-iso & \\
+    f : x & p1b & pi23b & Db \\
+    n :  desc-iso & & \\
+    f : x & p2b & pi23b & Db\\
+    n :  & p2pi23b-pi3b-iso  & \\
+    f : x & & pi3b & Db \\
+    n :  & pi3Db-Fb-iso \\
+    f : x & & & \\
+draw descent-id-double-comp-3.tex [y=0.4cm]
+    f : x & & & \\
+    n :  & Fb-pi1Db-iso \\
+    f : x & & pi1b & Db \\
+    n :  & pi1b-p1pi12b-iso & \\
+    f : x & p1b & pi12b & Db \\
+    n :  desc-iso & & \\
+    f : x & p2b & pi12b & Db\\
+    n :  & p2pi12b-pi2b-iso  & \\
+    f : x & & pi2b & Db \\
+    n :  & pi2b-p1pi23b-iso & \\
+    f : x & p1b & pi23b & Db \\
+    n :  desc-iso & & \\
+    f : x & p2b & pi23b & Db\\
+    n :  & p2pi23b-pi3b-iso  & \\
+    f : x & & pi3b & Db \\
+    n :  & pi3Db-Fb-iso \\
+    f : x & & & \\
+define natural transformation pi1b-p1pi13b-iso "$\cong$"
+    source : pi1b \\
+    target : p1b & pi13b \\
+define natural transformation p2pi13b-pi3b-iso "$\cong$"
+    source : p2b & pi13b \\
+    target : pi3b \\
+draw descent-id-double-comp-4.tex [y=0.4cm]
+    f : x & & & \\
+    n :  & Fb-pi1Db-iso \\
+    f : x & & pi1b & Db \\
+    n :  & pi1b-p1pi13b-iso & \\
+    f : x & p1b & pi13b & Db \\
+    n :  desc-iso & pi13b & Db \\
+    f : x & p2b & pi13b & Db\\
+    n :  & p2pi13b-pi3b-iso  & \\
+    f : x & & pi3b & Db \\
+    n :  & pi3Db-Fb-iso \\
+    f : x & & & \\
+draw descent-to-gamma-axiom-1-1.tex [y=0.6cm]
+    f : x & & & & \\
+    n :  & Fb-p1Deltab-iso \\
+    f : x & p1b & & & Deltab \\
+    n :  desc-iso & p2-unit & \\
+    f : x & p2b & p2f & p2b & Deltab \\
+    n :  & p2-counit & p2Deltab-Fb-iso \\
+    f : x \\
+define natural transformation p2pi12b-p1pi23b-iso "$\cong$"
+    source : p2b & pi12b \\
+    target : p1b & pi23b \\
+define natural transformation pi23-counit "$\epsilon_{\pi_{23}}$"
+    source : pi23b & pi23f \\
+    target : Fb2 \\
+draw descent-to-gamma-axiom-2-1.tex [y=0.6cm]
+    f : x & p1b & & & pi12b & pi23f & p2f \\
+    n :  & & p2-unit & & & \\
+    f : x & p1b & p2f & p2b & pi12b & pi23f & p2f \\
+    n : desc-iso & & p2pi12b-p1pi23b-iso & & \\
+    f : x & p2b & p2f & p1b & pi23b & pi23f & p2f \\
+    n :  & p2-counit & & pi23-counit &  \\
+    f : x & & & p1b & & & p2f \\
+    n : desc-iso & \\
+    f :  & x & p2b & & & & p2f \\
+    n :   & p2-counit \\
+    f :  & x \\
+draw descent-to-gamma-axiom-2-2.tex [y=0.6cm]
+    f : x & p1b & pi12b & pi23f & p2f \\
+    n : desc-iso & & & \\
+    f : x & p2b & pi12b & pi23f & p2f \\
+    n :  & p2pi12b-p1pi23b-iso & & \\
+    f : x & p1b & pi23b & pi23f & p2f \\
+    n : desc-iso & & & \\
+    f : x & p2b &pi23b & pi23f & p2f \\
+    n :  & & pi23-counit & \\
+    f : x & p2b & & & p2f \\
+    n :  & p2-counit \\
+    f : x \\
+define natural transformation p2pi13b-p2pi23b-iso "$\cong$"
+    source : p2b & pi13b \\
+    target : p2b & pi23b \\
+draw descent-to-gamma-axiom-2-3.tex [y=0.6cm]
+    f : x & p1b & pi12b & pi23f & p2f \\
+    n :  & p1pi12b-p1pi13b-iso & & \\
+    f : x & p1b & pi13b & pi23f & p2f \\
+    n : desc-iso & & & \\
+    f : x & p2b & pi13b & pi23f & p2f \\
+    n :  & p2pi13b-p2pi23b-iso & & \\
+    f : x & p2b & pi23b & pi23f & p2f \\
+    n :  & & pi23-counit & \\
+    f : x & p2b & & & p2f \\
+    n :  & p2-counit \\
+    f : x \\
+draw descent-to-gamma-axiom-2-4.tex [y=0.6cm]
+    f : x & p1b & pi12b & pi23f & p2f \\
+    n :  & p1pi12b-p1pi13b-iso & pi23p2f-pi13p2f-iso \\
+    f : x & p1b & pi13b & pi13f & p2f \\
+    n : desc-iso & & & \\
+    f : x & p2b & pi13b & pi13f & p2f \\
+    n :  & & pi13-counit & \\
+    f : x & p2b & & & p2f \\
+    n :  & p2-counit \\
+    f : x \\
+draw counit-iso-eq-1.tex [y=0.8cm]
+    f : p2b & pi13b & pi23f & p2f\\
+    n : p2pi13b-p2pi23b-iso & & \\
+    f : p2b & pi23b & pi23f & p2f \\
+    n :  & pi23-counit & \\
+    f : p2b & & & p2f \\
+    n : p2-counit \\
+draw counit-iso-eq-2.tex [y=0.8cm]
+    f : p2b & pi13b & pi23f & p2f \\
+    n :  & & pi23p2f-pi13p2f-iso \\
+    f : p2b & pi13b & pi13f & p2f \\
+    n :  & pi13-counit & \\
+    f : p2b & & & p2f \\
+    n : p2-counit \\
+draw gamma-to-algebra-def-1.tex
+    n : mult-ff \\
+    f :  & x &  \\
+define natural transformation pp-ff-p1p2 "$\PP_{f,f}^{p_1,p_2}$"
+    source : p1b & p2f \\
+    target : ff & fb \\
+define natural transformation pp-ff-p1p2-inv "$(\PP_{f,f}^{p_1,p_2})^{-1}$"
+    source : ff & fb \\
+    target : p1b & p2f \\
+draw gamma-to-algebra-def-2.tex
+    f : x & ff & & fb \\
+    n :  & pp-ff-p1p2-inv \\
+    f : x & p1b & p2f \\
+    n : gamma \\
+    f : & x & \\
+draw gamma-to-algebra-axiom-1-1.tex
+    n : f-unit \\
+    f : ff & & fb \\
+    n : pp-ff-p1p2-inv \\
+    f : p1b & & p2f \\
+draw gamma-to-algebra-axiom-1-2.tex [y=0.7cm]
+    n : Fb-p1Deltab-iso \\
+    f : p1b & & & Deltab \\
+    n :  & p2-unit & \\
+    f : p1b & p2f & p2b & Deltab \\
+    n :  & & p2Deltab-Fb-iso \\
+    f : p1b & p2f \\
+draw gamma-to-algebra-axiom-1-3.tex
+    n : f-unit \\
+draw gamma-to-algebra-axiom-1-4.tex [y=0.7cm]
+    n : Fb-p1Deltab-iso \\ 
+    f : p1b & & & Deltab \\
+    n :  & p2-unit & \\
+    f : p1b & p2f & p2b & Deltab \\
+    n :  & & p2Deltab-Fb-iso \\
+    f : p1b & p2f \\
+    n : pp-ff-p1p2 \\
+    f : ff & & fb \\
+draw gamma-to-algebra-axiom-1-5.tex [y=0.7cm]
+    n : Fb-p1Deltab-iso \\
+    f :  & & p1b & & & Deltab \\
+    n : f-unit & & p2-unit & \\
+    f : ff & fb & p1b & p2f & p2b & Deltab \\
+    n :  & fp1b-fp2b-iso & & p2Deltab-Fb-iso \\
+    f : ff & fb & p2b & p2f \\
+    n :  & &  p2-counit \\
+    f : ff & fb \\
+draw gamma-to-algebra-axiom-1-6.tex [y=0.7cm]
+    n : f-unit \\
+    f : ff & fb  \\
+    n :  & & Fb-p1Deltab-iso \\
+    f : ff & fb & p1b & Deltab \\
+    n :  & fp1b-fp2b-iso & \\
+    f : ff & fb & p2b & Deltab \\
+    n :  & & p2Deltab-Fb-iso \\
+    f : ff & fb \\
+draw gamma-to-algebra-axiom-2-1.tex [y=0.7cm]
+    f : x & ff & fb & & ff & fb \\
+    n :  & & & & \\
+    f : x & ff & fb & & ff & fb \\
+    n :  & pp-ff-p1p2-inv & pp-ff-p1p2-inv \\
+    f : x & p1b & p2f & & p1b & p2f \\
+    n :  gamma & & \\
+    f : & x & & & p1b & p2f \\
+    n : gamma \\
+    f : & & & x & & \\
+draw gamma-to-algebra-axiom-2-2.tex [y=0.7cm]
+    f : x & ff & fb & & ff & fb \\
+    n :  & & & & \\
+    f : x & ff & fb & & ff & fb \\
+    n :  & & f-counit & \\
+    f : x & ff & & & & fb \\
+    n :  & pp-ff-p1p2-inv \\
+    f : x & &  & p1b & p2f \\
+    n : gamma \\
+    f : & & x \\
+draw gamma-to-algebra-axiom-2-3.tex [y=0.7cm]
+    f : x & p1b & pi12b & & pi23f & p2f \\
+    n :  & & PP-pi12pi23-p2p1 & \\
+    f : x & p1b & p2f & & p1b & p2f \\
+    n :  & pp-ff-p1p2 & pp-ff-p1p2 \\
+    f : x & ff & fb & & ff & fb \\
+    n :  & & f-counit & \\
+    f : x & ff & & & & fb \\
+    n :  & pp-ff-p1p2-inv \\
+    f : x & &  & p1b & p2f \\
+    n : gamma \\
+    f : & & x \\
+draw gamma-to-algebra-axiom-2-4.tex [y=0.7cm]
+    f : p1b & pi12b & pi23f & p2f \\
+    n : p1pi12b-p1pi13b-iso & pi23p2f-pi13p2f-iso \\
+    f : p1b & pi13b & pi13f & p2f \\
+    n : & pi13-counit & \\
+    f : p1b & & & p2f \\
+    n : pp-ff-p1p2 \\
+    f : ff & & & fb \\
+draw gamma-to-algebra-axiom-2-5.tex [y=0.65cm]
+    f : p1b & pi12b & & pi23f & p2f \\
+    n :  & PP-pi12pi23-p2p1 & \\
+    f : p1b & p2f & & p1b & p2f \\
+    n : pp-ff-p1p2 & pp-ff-p1p2 \\
+    f : ff & fb & & ff & fb \\
+    n :  & f-counit & \\
+    f : ff & & & & fb\\
+draw gamma-to-algebra-axiom-2-6.tex [y=0.65cm]
+    f : & & p1b & & & & & pi12b & pi23f & p2f \\
+    n :  & p2-unit & & & \\
+    f : & & p1b & p2f & & &  p2b & pi12b & pi23f & p2f \\
+    n : f-unit & & & p2pi12b-p1pi23b-iso & & \\
+    f : ff & fb & p1b & p2f & & & p1b & pi23b & pi23f & p2f \\
+    n :  & fp1b-fp2b-iso & & & pi23-counit & \\
+    f : ff & fb & p2b & p2f &  &  & p1b & & & p2f \\
+    n :  & & p2-counit & f-unit & & \\
+    f : ff & fb & & & ff & fb & p1b & & & p2f \\
+    n :  & f-counit & fp1b-fp2b-iso & \\
+    f : ff & & & & & fb & p2b & & & p2f \\
+    n : & & p2-counit \\
+    f : ff & & & & & fb \\
+draw gamma-to-algebra-axiom-2-7.tex [y=0.65cm]
+    f : & & p1b & pi12b & pi23f & p2f \\
+    n : f-unit & & & & \\
+    f : ff & fb & p1b & pi12b & pi23f & p2f \\
+    n :  & fp1b-fp2b-iso & & & \\
+    f : ff & fb & p2b & pi12b & pi23f & p2f \\
+    n :  & & p2pi12b-p1pi23b-iso & & \\
+    f : ff & fb & p1b & pi23b & pi23f & p2f \\
+    n : & fp1b-fp2b-iso & pi23-counit & \\
+    f : ff & fb & p2b & & & p2f \\
+    n : & & p2-counit \\
+    f : ff & fb \\
+draw gamma-to-algebra-axiom-2-8.tex [y=0.65cm]
+    f : & & p1b & pi12b & pi23f & p2f \\
+    n : f-unit & p1pi12b-p1pi13b-iso & & \\
+    f : ff & fb & p1b & pi13b & pi23f & p2f\\
+    n :  & fp1b-fp2b-iso & & & \\
+    f : ff & fb  & p2b & pi13b & pi23f & p2f \\
+    n :  & & p2pi13b-p2pi23b-iso & & \\
+    f : ff & fb & p2b & pi23b & pi23f & p2f \\
+    n :  & & & pi23-counit & \\
+    f : ff & fb & p2b & & & p2f\\
+    n : & & p2-counit \\
+    f : ff & fb \\
+draw gamma-to-algebra-axiom-2-9.tex [y=0.7cm]
+    f : & & p1b & pi12b & pi23f & p2f \\
+    n : f-unit & p1pi12b-p1pi13b-iso & pi23p2f-pi13p2f-iso \\
+    f : ff & fb & p1b & pi13b & pi13f & p2f \\
+    n :  & fp1b-fp2b-iso & pi13-counit & \\
+    f : ff & fb & p2b & & & p2f \\
+    n :  & & p2-counit \\
+    f : ff & fb \\
+draw three-composition-algebra.tex [y=0.6cm]
+    f : x & ff & & & fb \\
+    n : & pp-ff-p1p2-inv \\
+    f : x & p1b & & & p2f \\
+    n :  & & p2-unit & \\
+    f : x & p1b & p2f & p2b & p2f \\
+    n :  & pp-ff-p1p2 & p2-counit \\
+    f : x & ff & fb \\
+    n : mult-ff \\
+    f : & x \\
+draw three-composition-descent.tex [y=0.6cm]
+    f : x & p1b \\
+    n : & & p2-unit \\
+    f : x & p1b & p2f & p2b \\
+    n : & pp-ff-p1p2 & \\
+    f : x & ff & fb & p2b \\
+    n : x & pp-ff-p1p2-inv & \\
+    f : x & p1b & p2f & p2b \\
+    n : desc-iso & & \\
+    f : x & p2b & p2f & p2b \\
+    n :  & p2-counit & \\
+    f : x & & & p2b \\
+draw three-composition-gamma.tex [y=0.6cm]
+    f : x & p1b & & & p2f \\
+    n :  & & p2-unit & \\
+    f : x & p1b & p2f & p2b & p2f \\
+    n : & pp-ff-p1p2 & p2-counit \\
+    f : x & ff & fb \\
+    n : & pp-ff-p1p2-inv \\
+    f : x & p1b & p2f \\
+    n : gamma \\
+    f : & x & \\

@@ -1,0 +1,331 @@
+define category C "$C$"
+define category D "$D$"
+define functor F "$F$"
+    source : C
+    target : D
+define functor G "$G$"
+    source : D
+    target : C
+define natural transformation unit "$\eta$"
+    source : C \\
+    target : F & G \\
+    shape : utriangle
+define natural transformation counit "$\epsilon$"
+    source : G & F \\
+    target : D \\
+    shape : btriangle
+draw adjunction-unit.tex 
+    n : unit \\
+    f : F & G \\
+draw adjunction-counit.tex
+    f : G & F \\
+    n : counit \\
+draw adjunction-eq-1.tex
+    f: & & F \\
+    n : unit & \\
+    f : F & G & F \\
+    n : & counit \\
+    f : F & & \\
+draw adjunction-f-id.tex
+    n : F \\
+    n : F \\
+draw adjunction-eq-2.tex
+    f : G & & \\
+    n :  & unit \\
+    f : G & F & G \\
+    n : counit & \\
+    f : & & G \\
+draw adjunction-g-id.tex
+    n : G \\
+    n : G \\
+
+define functor T "$T$"
+    source : C 
+    target : C
+define natural transformation t0 "$\eta$"
+    source : C \\
+    target : T \\
+    shape : utriangle
+define natural transformation t2 "$\mu$"
+    source : T & T \\
+    target : T \\
+    shape : circle
+draw monad-t0.tex
+    n : t0 \\
+draw monad-t2.tex [x=0.7cm]
+    f : T & & T\\
+    n : t2 \\
+    f : & T & \\
+draw monad-unit-eq-1.tex [y=0.8cm,x=0.6cm]
+    f : & & T \\
+    n : t0 & \\
+    f : T & & T \\
+    n : t2 \\
+    f : & T & \\
+    n : \\
+    f : & T & \\
+draw monad-t-id.tex [y=0.8cm]
+    f : T \\
+    n : \\
+    f : T \\
+    n : \\
+    f : T \\
+    n : \\
+    f : T \\
+draw monad-unit-eq-2.tex [y=0.8cm,x=0.6cm]
+    f : T & & \\
+    n : & t0 \\
+    f : T & & T \\
+    n : t2 \\
+    f : & T & \\
+    n : \\
+    f : & T & \\
+draw monad-prod-eq-1.tex [x=0.5cm]
+    f : T & & T & & T \\
+    n : t2 & \\
+    f : & T & & T & \\
+    n : t2 \\
+    f : & & T & & \\
+draw monad-prod-eq-2.tex [x=0.5cm]
+    f : T & & T & & T \\
+    n : & t2 \\
+    f : & T & & T & \\
+    n : t2 \\
+    f : & & T & & \\
+draw adjunction-to-monad-def-t2.tex
+    f : F & G & F & G \\
+    n : & counit & \\
+    f : & F & G & \\
+draw adjunction-to-monad-check-1-1.tex
+    f :  & & F & G \\
+    n : unit & & \\
+    f : F & G & F & G \\
+    n : & counit & \\
+    f : & F & G & \\
+draw adjunction-to-monad-check-1-2.tex
+    f : F & G \\
+    n : & \\
+    f : F & G \\
+    n : & \\
+    f : F & G \\
+draw adjunction-to-monad-check-1-3.tex
+    f : F & G & & \\
+    n :  & & unit \\
+    f : F & G & F & G \\
+    n :  & counit & \\
+    f : & F & G & \\
+draw adjunction-to-monad-check-2-1.tex
+    f : F & G & F & G & F & G \\
+    n :  & counit & & & \\
+    f :  & F & G & F & G & \\
+    n :  & counit & \\
+    f : & & F & G & & \\
+draw adjunction-to-monad-check-2-2.tex
+    f : F & G & F & G & F & G \\
+    n :  & & & counit & \\
+    f : & F & G & F & G & \\
+    n :  & counit & \\
+    f : & & F & G & & \\
+
+define category singleton "$\bullet$"
+define functor c "$c$"
+    source : singleton
+    target : C
+define natural transformation h "$\alpha$"
+    source : c & T \\
+    target : c \\
+draw algebra-morphism.tex [x=0.7cm]
+    f : c & & T \\
+    n : h \\
+    f :  & c & \\
+draw algebra-equality-1.tex [y=0.8cm,x=0.8cm]
+    f : c & &  \\
+    n :  & t0 \\
+    f : c & & T \\
+    n : h \\
+    f :  & c & \\
+draw algebra-c-id.tex [y=0.8cm]
+    f : c \\
+    n : \\
+    n : \\
+draw algebra-equality-2-1.tex [x=0.8cm]
+    f : c & & T & & T \\
+    n :  h & \\
+    f :  & c & & T &  \\
+    n : h \\
+    f : & & c & & \\
+draw algebra-equality-2-2.tex [x=0.8cm]
+    f : c & & T & & T \\
+    n :  & t2 \\
+    f : & c & & T & \\
+    n : h \\
+    f : & & c & & \\ 
+
+define functor gd "$G(d)$"
+    source : singleton
+    target : C
+define natural transformation gd-h "$h$"
+    source : gd & T \\
+    target : gd \\
+draw algebra-gd-h.tex [x=0.7cm]
+    f : gd & & T \\
+    n : gd-h \\
+    f : & gd & \\
+define functor d "$d$" 
+    source : singleton
+    target : D
+draw algebra-gd-h-def.tex
+    f : d & G & F & G \\
+    n :  & counit & \\
+    f :  & d & G &  \\
+draw algebra-gd-eq-1-1.tex
+    f : d & G &  &  \\
+    n :  & & unit \\
+    f : d & G & F & G \\
+    n :  & counit & \\
+    f :  & d  & G & \\
+draw algebra-gd-eq-1-2.tex
+    f : d & G \\
+    n :  & \\
+    n :  & \\
+draw algebra-gd-eq-2-1.tex
+    f : d & G & F & G & F & G \\
+    n :  & counit & & & \\
+    f :   & d & G & F & G & \\
+    n :  & counit & \\
+    f :   & & d & G & & \\
+draw algebra-gd-eq-2-2.tex
+    f : d & G & F & G & F & G \\
+    n :  & & & counit & \\
+    f :  & d & G & F & G & \\
+    n :  & counit & \\
+    f : & & d & G & & \\
+
+define category Fa "$\mc F(a)$"
+define category Fb "$\mc F(b)$"
+define category Fc "$\mc F(c)$"
+define category Fd "$\mc F(d)$"
+define functor sb "$s^\ast$"
+    source : Fb
+    target : Fa
+define functor sf "$s_\ast$"
+    source : Fa
+    target : Fb
+define natural transformation s-unit "$\eta_s$"
+    source : Fa \\
+    target : sf & sb \\
+define natural transformation s-counit "$\epsilon_s$"
+    source : sb & sf \\
+    target : Fb \\
+define functor tb "$t^\ast$"
+    source : Fc
+    target : Fa
+define functor tf "$t_\ast$"
+    source : Fa
+    target : Fc
+define natural transformation t-unit "$\eta_t$"
+    source : Fa \\
+    target : tf & tb \\
+define natural transformation t-counit "$\epsilon_t$"
+    source : tb & tf \\
+    target : Fc \\
+define functor gb "$g^\ast$"
+    source : Fd
+    target : Fc
+define functor gf "$g_\ast$"
+    source : Fc
+    target : Fd
+define natural transformation g-unit "$\eta_g$"
+    source : Fc \\
+    target : gf & gb \\
+define natural transformation g-counit "$\epsilon_g$"
+    source : gb & gf \\
+    target : Fd \\
+define functor fb "$f^\ast$"
+    source : Fd
+    target : Fb
+define functor ff "$f_\ast$"
+    source : Fb
+    target : Fd
+define natural transformation f-unit "$\eta_f$"
+    source : Fb \\
+    target : ff & fb \\
+define natural transformation f-counit "$\epsilon_f$"
+    source : fb & ff \\
+    target : Fd \\
+define natural transformation push-pull "$\PP^{s,t}_{f,g}$"
+    source : sb & tf \\
+    target : ff & gb \\
+define natural transformation fsb-gtb-iso "$\cong$"
+    source : fb & sb \\
+    target : gb & tb \\
+draw push-pull-stfg.tex [y=0.8cm]
+    n : push-pull \\
+draw push-pull-stfg-def.tex [y=0.7cm]
+    f : & & sb & tf\\
+    n : f-unit & & \\
+    f : ff & fb & sb & tf\\
+    n : & fsb-gtb-iso & \\
+    f : ff & gb & tb & tf \\
+    n :  & & t-counit \\
+    f : ff & gb \\
+
+define functor f1b "$f_1^\ast$"
+    source : Fa
+    target : Fb
+define functor f1f "$f_{1\ast}$"
+    source : Fb
+    target : Fa
+define functor f2b "$f_2^\ast$"
+    source : Fa
+    target : Fb
+define functor f2f "$f_{2\ast}$"
+    source : Fb
+    target : Fa
+define natural transformation f1-unit "$\eta_{f_1}$"
+    source : Fb \\
+    target : f1f & f1b \\
+define natural transformation f1-counit "$\epsilon_{f_1}$"
+    source : f1b & f1f \\
+    target : Fa \\
+define natural transformation f2-unit "$\eta_{f_2}$"
+    source : Fb \\
+    target : f2f & f2b \\
+define natural transformation f2-counit "$\epsilon_{f_2}$"
+    source : f2b & f2f \\
+    target : Fa \\
+define natural transformation f1b-f2b-iso "$\cong$"
+    source : f1b \\
+    target : f2b \\
+define natural transformation f2b-f1b-iso "$\cong$"
+    source : f2b \\
+    target : f1b \\
+define natural transformation f1f-f2f-iso "$\cong$"
+    source :  f1f \\
+    target : f2f \\
+define natural transformation f2f-f1f-iso "$\cong$"
+    source : f2f \\
+    target : f1f \\
+draw f1f2-unit-id-1.tex [y=0.7cm]
+    f : Fb \\
+    n : f1-unit \\
+    f : f1f & f1b \\
+    n : f1f-f2f-iso & f1b-f2b-iso \\
+    f : f2f & f2b \\
+draw f1f2-unit-id-2.tex
+    f : Fb \\
+    n : f2-unit \\
+draw f1f2-counit-id-1.tex [y=0.7cm]
+    f : f2b & f2f \\
+    n : f2b-f1b-iso  & f2f-f1f-iso \\
+    f : f1b & f1f \\
+    n : f1-counit \\
+    f : Fa\\
+draw f1f2-counit-id-2.tex
+    n : f2-counit \\
+draw f1f2-comp-of-isos.tex [y=0.8cm]
+    f : f1f & f1b \\
+    n : f1f-f2f-iso & \\
+    f : f2f & f1b \\
+    n :  & f1b-f2b-iso \\
+    f : f2f & f2b \\

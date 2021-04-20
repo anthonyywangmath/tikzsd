@@ -1,0 +1,539 @@
+\documentclass{amsart}
+\input preamble
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\tikzset{utriangle/.style={regular polygon, regular polygon sides=3,
+    inner sep=0.5pt}}
+\tikzset{btriangle/.style={regular polygon, regular polygon sides=3,
+    shape border rotate=180, inner sep=0.5pt}}
+
+\definecolor{backcolor}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    basicstyle=\ttfamily,
+    columns=fullflexible,
+    keepspaces=true,
+}
+\lstset{style=mystyle}
+\newcommand{\vlength}{0.2cm}
+
+\begin{document}
+\title{\texttt{tikzsd} version 1.0.0 user manual}
+\maketitle
+\tableofcontents
+\section{Introduction}
+    This is a manual for version 1.0.0 of \texttt{tikzsd}, a Haskell program
+        which generates code for inclusion into a \LaTeX \ file.
+    The generated code is a \texttt{tikzpicture} environment.
+
+    The program works by defining categorical objects, and then specifying
+        a natural transformation using those categorical objects, with notation
+        for how it is to be drawn.
+
+    For example,
+    \lstinputlisting{adjunction-definitions.tzsd}
+    will define the categorical objects needed to specify an adjunction.
+    The notation for these statements is explained in section .
+
+    If one then writes
+    \lstinputlisting{adjunction-draw.tzsd}
+    the program will write code to the file \texttt{adjunction-eq-1.tex}.
+    This code will be a \texttt{tikzpicture} environment,
+        which can be included in \LaTeX\ code.
+    For example, if one writes
+
+\vspace{\vlength}
+\begin{verbatim}
+\input adjunction-eq-1
+\end{verbatim}
+\vspace{\vlength}
+in a \LaTeX \ file which contains the lines
+
+\vspace{\vlength}
+\begin{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\tikzset{utriangle/.style={regular polygon, regular polygon sides=3,
+    inner sep=0.5pt}}
+\tikzset{btriangle/.style={regular polygon, regular polygon sides=3,
+    shape border rotate=180, inner sep=0.5pt}}
+\end{verbatim}
+\vspace{\vlength}
+    in the preamble
+    and is in the same folder as \texttt{adjunction-eq-1.tex},
+    then the following string diagram
+\[
+    \input adjunction-eq-1
+\]
+will be created at the corresponding place in the document.
+\section{Usage}
+Once installed, one can invoke the program by typing in a terminal
+
+\vspace{\vlength}
+\texttt{\$ tikzsd file1 ... filen}
+\vspace{\vlength}
+
+\noindent where \texttt{file1 ... filen} is a list of one or more text files
+    containing code to be processed by the program.
+The program processes the commands in these files in order.
+
+In our examples, we have named our text files with code for processing
+    by \texttt{tikzsd} with extension \texttt{.tzsd}, i.e.
+    \texttt{file1.tzsd}.
+This is not necessary, and just our convention.
+In the rest of this document, by a \texttt{.tzsd} file we mean a text file
+    with code to be processed by \texttt{tikzsd}.
+
+One of the commands which can be given in a \texttt{.tzsd} file
+    is a draw command telling the program to output TikZ code to a file
+    (see section \ref{draw-ref}).
+This file can then be \texttt{\textbackslash input} into a \texttt{.tex}
+    file where you want the corresponding diagram.
+
+We recommend looking at the example in \texttt{/doc/examples/benabou-roubaud/}
+    of this repository for an example usage of this program.
+
+\section{Defining Categorical Objects}
+\subsection{Defining categories}
+One defines a category using the following notation:
+
+\vspace{\vlength}
+\begin{verbatim}
+define category <id> "<latex-string>"
+\end{verbatim}
+\vspace{\vlength}
+where 
+\begin{itemize}
+    \item \texttt{<id>} is a string of characters which does not contain a space character,
+        or one of the characters \texttt{\&}, \texttt{\char`\\}, \texttt{[}, or \texttt{]}.
+    This \texttt{<id>} is used to refer to the category in the rest of the \texttt{.tzsd} file.
+    \item \texttt{<latex-string>} is a string of characters which does not contain the character
+        \texttt{"}.
+    This string contains the \LaTeX \ code used to label the category.
+\end{itemize}
+The spaces in the above code may be replaced with any nonempty sequence of space characters,
+    such as spaces, tabs or new lines.
+
+\begin{example}
+The code
+\vspace{\vlength}
+\begin{verbatim}
+define category C "$C$"
+\end{verbatim}
+\vspace{\vlength}
+\noindent will define a category, which is referred to by the id \texttt{C} in the rest of the
+\texttt{.tzsd} file, and which will be labeled using \texttt{\$C\$}.
+\end{example}
+\begin{remark}
+In version 1.0.0 of \texttt{tikzsd}, the \texttt{<latex-string>} is never used.
+There is at least one planned future feature which will use it.
+This \texttt{<latex-string>} will likely be made optional in a future release.
+\end{remark}
+\subsection{Defining functors}
+One defines a functor using the following notation:
+\vspace{\vlength}
+\begin{verbatim}
+define functor <id> "<latex-string>" source:<s-id> target:<t-id>
+\end{verbatim}
+\vspace{\vlength}
+where
+\begin{itemize}
+    \item \texttt{<id>} is a string of characters which does not contain a space character,
+        or one of the characters \texttt{\&}, \texttt{\char`\\}, \texttt{[}, or \texttt{]}.
+        This \texttt{<id>} is used to refer to the functor in the rest of the \texttt{.tzsd}
+            file.
+    \item \texttt{<latex-string>} is a string of characters which does not contain the character
+            \texttt{"}.
+        This string contains the \LaTeX \ code used to label the functor.
+    \item \texttt{<s-id>} is the id of the category which is the source of the functor.
+    \item \texttt{<t-id>} is the id of the category which is the target of the functor.
+\end{itemize}
+The spaces in the above code may be replaced by any nonempty sequence of space characters, such as
+    spaces, tabs or new lines.
+One may also insert space characters after \texttt{source} or \texttt{target} before the \texttt{:}
+    character, or after the \texttt{:} character before the \texttt{<s-id>} or \texttt{<t-id>}.
+\begin{example}
+The code
+\vspace{\vlength}
+\begin{verbatim}
+define functor F "$F$"
+    source : C
+    target : D
+\end{verbatim}
+\vspace{\vlength}
+will define a functor, which is referred to by the id \texttt{F} in the rest of the \texttt{.tzsd} file,
+and which will be labelled using \texttt{\$F\$}.
+This functor has source the category \texttt{C} and target the category \texttt{D}.
+The program will print an error if the category \texttt{C} or the category \texttt{D} have not been
+    defined.
+
+Due to how spacing works, one can also put all of the above code on one line.
+So
+\vspace{\vlength}
+\begin{verbatim}
+define functor F "$F$" source:C target:D
+\end{verbatim}
+\vspace{\vlength}
+is equivalent to the code at the beginning of this example.
+\end{example}
+\subsection{Specifying compositions of functors (and spacing)} \label{specifying-func-comp}
+A composition of functors is specified by a \texttt{\&} separated list of elements
+    which is terminated by the two characters \texttt{\char`\\}\texttt{\char`\\}, as below:
+\vspace{\vlength}
+\begin{verbatim}
+<elem-1> & <elem-2> & ... & <elem-n> \\
+\end{verbatim}
+\vspace{\vlength}
+Here, \texttt{<elem-i>} corresponds to the $i$th column.
+Each \texttt{<elem-i>} is either
+\begin{enumerate}
+    \item The id of a functor.
+    \item The id of a category, corresponding to the identity functor of that category.
+    \item An empty string. 
+        This is a placeholder used for spacing purposes.
+\end{enumerate}
+At least one of the elements is not of type (3).
+The spaces in the above code may be replaced with zero or more space characters,
+    such as spaces, tabs and new lines.
+
+In a composition of functors, we shall call elements of the first type \emph{basic functors}.
+These will correspond to strings in a string diagram.
+The length of the composite will be the number of basic functors in the composite.
+
+As is conventional for how string diagrams are drawn, the composition is from left to right.
+So to specify a composition $F\circ G$, one might write
+\vspace{\vlength}
+\begin{verbatim}
+G & F \\
+\end{verbatim}
+\vspace{\vlength}
+which corresponds to a string for $G$ in the first column and a string for $F$ in the second column,
+or one might write
+\vspace{\vlength}
+\begin{verbatim}
+ & G & & F \\
+\end{verbatim}
+\vspace{\vlength}
+which corresponds to a string for $G$ in the second column, and a string for $F$ in the fourth
+column.
+\begin{remark}
+    Since identity functors are not drawn by the program, one can often omit elements of type (2)
+        and use empty elements (3) instead.
+
+    For example, if $F:C\to D$ and $G:D\to C$ are functors, then
+\vspace{\vlength}
+\begin{verbatim}
+F & D & G \\
+\end{verbatim}
+\vspace{\vlength}
+    and
+\vspace{\vlength}
+\begin{verbatim}
+F & & G \\
+\end{verbatim}
+\vspace{\vlength}
+    both specify the same composite functor $G\circ F$ and the same spacing for the
+    basic functors $F$ and $G$.
+
+The one exception to this is when specifying an identity functor by itself:
+\vspace{\vlength}
+\begin{verbatim}
+C \\
+\end{verbatim}
+\vspace{\vlength}
+cannot be changed to
+\vspace{\vlength}
+\begin{verbatim}
+ \\
+\end{verbatim}
+\vspace{\vlength}
+because an empty composition is not well-defined, so the meaning of a composition
+with only empty elements cannot be imputed.
+\end{remark}
+\subsection{Defining natural transformations}
+One defines a natural transformation using the following notation:
+\vspace{\vlength}
+\begin{verbatim}
+define natural transformation <id> "<latex-string>"
+    source : <source-composition>
+    target : <target-composition>
+    shape : <shape>
+\end{verbatim}
+\vspace\vlength
+where
+\begin{enumerate}
+    \item \texttt{<id>} is a string of characters which does not contain a space character,
+        or one of the characters \texttt{\&}, \texttt{\char`\\}, \texttt{[}, or \texttt{]}.
+        This \texttt{<id>} is used to refer to the natural transformation in the rest of the
+        \texttt{.tzsd} file.
+    \item \texttt{<latex-string>} is a string of characters which does not contain the character
+        \texttt{"}.
+        This string contains the \LaTeX\ code used to label the natural transformation.
+    \item \texttt{<source-composition>} is code used to specify a composite functor which is
+        the source of the natural transformation.
+        Notation for this code is described in \ref{specifying-func-comp}.
+    \item \texttt{<target-composition>} is code used to specify a composite functor which is
+        the target of the natural transformation.
+        Notation for this code is described in \ref{specifying-func-comp}.
+    \item The line \texttt{shape:<shape>} is optional.
+        If it exists, \texttt{<shape>} is a string of alphanumeric characters
+            (no spaces or punctuation),
+            and is \LaTeX\ code used to specify the shape of the 
+            node representing the natural
+            transformation.
+        If it doesn't exist, no \LaTeX code specifying the shape is passed to the
+            node, and the shape of the node will be the default shape
+            in your \texttt{tikzpicture} environment.
+\end{enumerate}
+In the current version of the program, the two composite functors specified by \texttt{<source-composition>}
+    and \texttt{<target-composition>} cannot both be the identity functor of a category $C$.
+Conventionally, string diagrams do not draw identity functors, so the node 
+    corresponding to the natural transformation would be a very
+    ambiguous node with no in or out strings.
+\begin{remark}
+    In \texttt{<source-composition>} and \texttt{<target-composition>},
+        only the composite functor is desired, so the particular spacing given in these strings is
+        ignored.
+    In other words, for the purposes of specifying the source or target of a natural transformation,
+\vspace{\vlength}
+\begin{verbatim}
+    F & G \\
+\end{verbatim}
+\vspace{\vlength}
+and
+\vspace{\vlength}
+\begin{verbatim}
+    F & & G \\
+\end{verbatim}
+\vspace{\vlength}
+    are equivalent.
+\end{remark}
+\begin{remark}
+    The string \texttt{<shape>} is just treated as \LaTeX\ code which is passed to 
+        every node for the natural transformation.
+    In particular, you may need to define the shape in your \LaTeX\ file
+        if it is not a shape given by the package \texttt{tikz}.
+\end{remark}
+\begin{example}
+    The code
+\vspace\vlength
+\begin{verbatim}
+define natural transformation unit "$\eta$"
+    source : C \\
+    target : F & G \\
+    shape : utriangle
+\end{verbatim}
+\vspace\vlength
+defines a natural transformation, referred to by the id \texttt{unit} in the rest
+    of the \texttt{.tzsd} file, and which will be labeled by using \texttt{\$\char`\\eta\$}.
+When represented by a tikz node, the program will pass the string
+    \texttt{utriangle} as an option.
+If \texttt{C} is the id of a category $C$, and \texttt{F} and \texttt{G}
+    are the ids of functors $C\to D$ and $D\to C$,
+    the source of our defined natural transformation is the identity functor of $C$,
+    and the target is the composition $G\circ F$.
+\end{example}
+\section{Drawing String Diagrams} \label{draw-ref}
+Once the categorical objects are defined, the program is ready to draw string diagrams.
+For us, a string diagram is a way of visualizing a vertical composition
+    of horizontal compositions of natural transformations.
+
+\subsection{Draw a natural transformation}
+The notation for drawing a string diagram is as follows:
+\vspace\vlength
+\begin{verbatim}
+draw <output-file> [<options>]
+    <line-1>
+    <line-2>
+    ...
+    <line-n>
+\end{verbatim}
+\vspace\vlength
+where
+\begin{enumerate}
+    \item \texttt{<output-file>} is a string of characters which does not include
+        any space character.
+        This is the name of the file the program will write the \LaTeX\ code
+        for a \texttt{tikzpicture} environment drawing the string diagram.
+        The program will overwrite the contents of the file if it exists.
+    \item \texttt{[<options>]} is optional.
+        If it exists, \texttt{<options>} is a string of characters which does not
+        include the characters \texttt{[} or \texttt{]}.
+        This string is passed as options to the \texttt{tikzpicture}
+        written to the output file.
+        For example, one can write
+        \texttt{[x=0.5cm,y=0.5cm]} to change the horizontal and vertical spacing.
+    \item \texttt{<line-1>}, \texttt{<line-2>}, ..., \texttt{<line-n>}
+        are lines used to specify the string diagram to be drawn.
+        Each line is either a \emph{functor line}, which starts with \texttt{f:},
+        or a \emph{natural transformation line}, which starts with \texttt{n:}.
+        Roughly speaking, each natural transformation line specifies a horizontal
+            composition of defined natural transformations, and the
+            functor lines specify the spacing of the sources and targets of these
+            natural transformations.
+\end{enumerate}
+We rewrite the example from the introduction here for reference before describing the
+    notation for functor lines and natural transformation lines.
+\vspace\vlength
+\lstinputlisting{adjunction-draw.tzsd}
+\vspace\vlength
+
+\subsection{Functor lines} A functor line is of the form
+\vspace\vlength
+\begin{verbatim}
+f : <composition>
+\end{verbatim}
+\vspace\vlength
+    where \texttt{<composition>} is code for specifying a composition of functors,
+    with spacing, as described in \ref{specifying-func-comp}.
+
+    For example,
+\vspace\vlength
+\begin{verbatim}
+f: F & G & F \\
+\end{verbatim}
+\vspace\vlength
+    specifies the composition $F\circ G\circ F$, and says that the strings for 
+    these functors should be placed in the first, second and third columns.
+\subsection{Natural transformation lines}
+    Natural transformation lines are used to specify horizontal compositions of natural transformations,
+        with empty spaces imputed to be the identity natural transformation.
+
+    A natural transformation line is of the form
+\vspace\vlength
+\begin{verbatim}
+n : <elem-1> & <elem-2> & ... & <elem-n> \\
+\end{verbatim}
+\vspace\vlength
+    where each \texttt{<elem-i>} is either
+    \begin{enumerate}
+        \item The id of a natural transformation.
+        \item The id of a functor, representing the identity natural transformation of that functor.
+        \item The id of a category, representing the identity functor of the identity natural
+            transformation of that category.
+        \item An empty string. This tells the program use the expected source of the natural
+        transformation specfied by this line of natural transformations
+        (which comes from the preceding lines) to impute an identity functor at at this position.
+    \end{enumerate}
+\vspace\vlength
+The horizontal composition is from left to right, following the conventional layout of a string diagram
+    in category theory.
+\subsection{Default spacing}
+One can specify the string diagram to be drawn by alternating functor and natural transformation
+lines, starting and ending with a functor line.
+The functor lines specify the spacing of the strings for the functors in horizontal cross-sections
+of the string diagram, while the natural
+transformation lines specify the natural transformations between these functor lines.
+
+\begin{example}
+For example, we have seen
+\vspace\vlength
+\begin{verbatim}
+f : & & F \\
+n : unit & \\
+f : F & G & F \\
+n : & counit \\
+f : F & & \\
+\end{verbatim}
+\vspace\vlength
+    which alternates between functor lines and natural transformation lines.
+
+If one omits a functor line, the program can figure out which strings are expected at that cross
+section from the natural transformation lines, but it cannot figure out the spacing.
+If a functor line is omitted, the default spacing is used, where the leftmost string gets put in the
+first column, the second leftmost string in the second columns, ..., until the $n$th string
+gets put in the $n$th column.
+So to be less verbose, the above example is equivalent to
+\vspace\vlength
+\begin{verbatim}
+f : & & F \\
+n : unit & \\
+n : & counit \\
+\end{verbatim}
+\vspace\vlength
+Here, we've omitted the second and third functor lines and let the program use the default spacing
+    for these cross sections.
+\end{example}
+\subsection{Identity imputation}
+If a natural transformation line contains a empty element,
+    the program looks at the previous lines and imputes an identity natural transformation to put
+    in the corresponding place.
+\begin{example}
+In the example from the introduction of this manual,
+\vspace\vlength
+\begin{verbatim}
+f : & & F \\
+n : unit & \\
+\end{verbatim}
+\vspace\vlength
+    after processing the first line, the program sees that the current horizontal cross-section has one string,
+    corresponding to the functor with id \texttt{F}.
+When processing the second line, the program sees that the natural transformation with
+    id \texttt{unit} has $0$ strings coming in and $2$ strings coming out.
+It then imputes that the blank space should be the identity of the first string of the current
+cross-section.
+Thus, the program imputes \texttt{F} at the empty space, and processes the above as if it were
+\vspace\vlength
+\begin{verbatim}
+f : & & F \\
+n : unit & F \\
+\end{verbatim}
+\vspace\vlength
+Similarly,
+\vspace\vlength
+\begin{verbatim}
+f : F & G & F \\
+n : & counit \\
+\end{verbatim}
+\vspace\vlength
+is processed as if it were
+\vspace\vlength
+\begin{verbatim}
+f : F & G & F \\
+n : F & counit \\
+\end{verbatim}
+\vspace\vlength
+\end{example}
+\section{Future Roadmap}
+This is the user manual for version 1.0.0 of the \texttt{tikzsd} program.
+Here is a list of some features planned for future releases.
+\begin{enumerate}
+\item Give a way to pass options to the labels of the strings.
+    For example passing the option \texttt{swap} should put the label on the opposite side.
+\item Give a way to change the positioning of the  the labels of the strings/
+        have multiple labels per string/change the default behavior in other ways.
+
+    By default, the program attempts to put the label at approximately the vertical midpoint
+        of the string.
+    It should be possible to have a way of specifying something like \texttt{pos=20},
+        \texttt{pos=above} or \texttt{pos=below}.
+    Since each string is actually several Bezier curves spliced together,
+        one cannot just pass this as an option, and the program needs to compute the positioning
+        itself.
+\item Give alternate, less verbose methods of defining functors and natural transformations.
+    Instead of writing \texttt{source} and \texttt{target} every time, maybe just 
+        use an arrow \texttt{->} or \texttt{=>}.
+\item Give a way to define a functor as a composition of other functors.
+    Then when drawing, give an option to either use one string to represent this functor
+        or to \texttt{expand} the functor into its components.
+    So a functor defined to be the composition of two other functors will be drawn
+        as two strings when expanded, and just one string when not expanded.
+    There needs a way to associate a default spacing when expanding this functor.
+
+    One can view identity functors of categories as expanded versions of compositions
+        of no functors.
+\item When drawing natural transformations, for functor lines, allow the specification
+        of spacing without rewriting the names of the functors.
+\item Allow other ways of representing natural transformations.
+    Currently, all natural transformations are represented by a TikZ node.
+    We should be able to allow crossing over, crossing under, etc.
+\item Give notation to define common categorical constructs.
+    For example, there can be simplified notation for defining adjunctions,
+        monads, comonads, algebras for a monad, etc.
+\item Give a way to write comments.
+\item Give a way to change the base directory where the program writes its output.
+\item Add a \texttt{--help} option to the \texttt{tikzsd} program.
+\end{enumerate}
+\end{document} 

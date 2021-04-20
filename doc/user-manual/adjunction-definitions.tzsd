@@ -1,0 +1,16 @@
+define category C "$C$"
+define category D "$D$"
+define functor F "$F$"
+    source : C
+    target : D
+define functor G "$G$"
+    source : D
+    target : C
+define natural transformation unit "$\eta$"
+    source : C \\
+    target : F & G \\
+    shape : utriangle
+define natural transformation counit "$\varepsilon$"
+    source : G & F \\
+    target : D \\
+    shape : btriangle

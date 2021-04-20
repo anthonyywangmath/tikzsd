@@ -1,0 +1,49 @@
+name:                tikzsd
+version:             1.0.0
+
+github:              "anthonyywangmath/tikzsd"
+license:             MIT
+author:              "Anthony Wang"
+maintainer:          "anthony.y.wang.math@gmail.com"
+copyright:           "2021 Anthony Wang"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:            A program for generating LaTeX code of string diagrams.
+description:         Please see the README on GitHub at <https://github.com/anthonyywangmath/tikzsd#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- transformers
+- parsec
+- array
+- containers
+- mtl
+- lens
+
+library:
+  source-dirs: src
+
+executables:
+  tikzsd:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tikzsd
+
+tests:
+  tikzsd-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tikzsd

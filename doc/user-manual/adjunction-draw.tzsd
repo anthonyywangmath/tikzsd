@@ -1,0 +1,6 @@
+draw adjunction-eq-1.tex
+    f : & & F \\
+    n : unit & \\
+    f : F & G & F \\
+    n : & counit \\
+    f : F & & \\

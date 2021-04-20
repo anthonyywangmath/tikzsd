@@ -1,0 +1,13 @@
+\begin{tikzpicture}[baseline=(current bounding box.center),y=0.8cm]
+\path coordinate[] (tikzsd_internal_pos_0_0) at (0.0,0.0);
+\path coordinate[] (tikzsd_internal_pos_0_1) at (1.0,0.0);
+\path coordinate[] (tikzsd_internal_pos_1_0) at (0.0,-2.0);
+\path coordinate[] (tikzsd_internal_pos_1_1) at (1.0,-2.0);
+
+\path node[,draw,] (tikzsd_internal_nt_node_0_0) at (0.5,-1.0) {$\PP^{s,t}_{f,g}$};
+
+\path [draw] (tikzsd_internal_pos_0_0) ..controls(0.0,-0.5)..(tikzsd_internal_nt_node_0_0) node[pos=0.5,auto,] {$s^\ast$};
+\path [draw] (tikzsd_internal_pos_0_1) ..controls(1.0,-0.5)..(tikzsd_internal_nt_node_0_0) node[pos=0.5,auto,] {$t_\ast$};
+\path [draw] (tikzsd_internal_nt_node_0_0) ..controls(0.0,-1.5)..(tikzsd_internal_pos_1_0) node[pos=0.5,auto,] {$f_\ast$};
+\path [draw] (tikzsd_internal_nt_node_0_0) ..controls(1.0,-1.5)..(tikzsd_internal_pos_1_1) node[pos=0.5,auto,] {$g^\ast$};
+\end{tikzpicture}
