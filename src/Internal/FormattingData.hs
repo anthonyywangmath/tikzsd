@@ -109,9 +109,12 @@ default_ff func = let n = func_reduced_length func
 -- For example @show (FunctorFormatting 5 [1,2,4])@ is equal to @" &*&*& &*"@.
 instance Show FunctorFormatting where
     show ff 
-        | len==0 && positions_check = "empty"
-        | len>0 && positions_check  = intercalate "&" $ show_helper (ff_length ff) 0 (ff_positions_list ff)
-        | otherwise                 = "InvalidFunctorFormatting "++(show len)++" "++(show pos)
+        | len==0 && positions_check 
+            = "empty"
+        | len>0 && positions_check  
+            = intercalate "&" $ show_helper (ff_length ff) 0 (ff_positions_list ff)
+        | otherwise                 
+            = "InvalidFunctorFormatting "++(show len)++" "++(show pos)
         where 
             len = ff_length ff
             pos = ff_positions_list ff
@@ -192,15 +195,17 @@ nf_pos_to_coord nf (x,y)
     | x >= length nf                  = Nothing
     | y < 0                           = Nothing
     | y >= ff_num_positions (nf !! x) = Nothing
-    | otherwise                       = Just (fromIntegral ((ff_positions_list (nf!!x))!!y) , fromIntegral (-2*x))
+    | otherwise                       = Just (fromIntegral ((ff_positions_list (nf!!x))!!y) 
+                                             , fromIntegral (-2*x))
 
 -- | 'nf_pos_to_tikz_coord' returns @Just@ the TikZ coordinate path
 -- operation at 'nf_pos_to_coord', with the coordinate named by
 -- 'pos_to_internal_name'.
 -- It returns @Nothing@ if 'nf_pos_to_coord' returns @Nothing@.
 nf_pos_to_tikz_coord :: NatFormatting -> (Int,Int) -> Maybe TikzPathOperation
-nf_pos_to_tikz_coord nf (x,y) = do (a,b) <- nf_pos_to_coord nf (x,y)
-                                   return (PathOpCoordinate "" (pos_to_internal_name (x,y)) (Canvas a b))
+nf_pos_to_tikz_coord nf (x,y) 
+    = do (a,b) <- nf_pos_to_coord nf (x,y)
+         return (PathOpCoordinate "" (pos_to_internal_name (x,y)) (Canvas a b))
 
 -- | 'pos_to_internal_name' converts a position @(x,y)@ described by the documentation
 -- for 'nf_pos_to_coord' and converts it into a @String@ for referencing purposes inside a TikZ
@@ -238,8 +243,10 @@ get_nt_in_pos :: NaturalTransformation -> (Int, Int) -> Maybe NaturalTransformat
 get_nt_in_pos (NaturalTransformation n d s b o)  (x,y)
     | x/=0 || y/=0  = Nothing
     | otherwise     = Just (NaturalTransformation n d s b o)
-get_nt_in_pos (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) _ = Nothing
-get_nt_in_pos (NatTransVerticalComposite (OneGlobelet (Functor _ _ _ _) _ ) []) _ = Nothing
+get_nt_in_pos (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) _ 
+    = Nothing
+get_nt_in_pos (NatTransVerticalComposite (OneGlobelet (Functor _ _ _ _) _ ) []) _ 
+    = Nothing
 get_nt_in_pos (NatTransHorizontalComposite _bg nts) (x,y)
     | x /=0 || y < 0 || y>= length simple_nts = Nothing
     | otherwise                               = Just (simple_nts!!y)
@@ -261,17 +268,17 @@ get_nt_in_pos (NatTransVerticalComposite _bg nts) (x,y)
 nt_nf_pos_to_coord :: NaturalTransformation -> NatFormatting -> (Int, Int) -> Maybe (Float, Float)
 nt_nf_pos_to_coord (NaturalTransformation _n _d _s b _o) nf (x,y)
     | x /= 0 || y /= 0 = Nothing
-    | target_len == 0  = do source_first <- nf_pos_to_coord nf (0,0)
-                            source_last <- nf_pos_to_coord nf (0, source_len-1)
-                            return (0.5*((fst source_first)+(fst source_last)),-1) 
-    | source_len == 0  = do target_first <- nf_pos_to_coord nf (1,0)
-                            target_last <- nf_pos_to_coord nf (1, target_len-1)
-                            return (0.5*((fst target_first)+(fst target_last)),-1)
-    | otherwise        = do source_first <- nf_pos_to_coord nf (0,0)
-                            source_last <- nf_pos_to_coord nf (0,source_len-1)
-                            target_first <- nf_pos_to_coord nf (1,0)
-                            target_last <- nf_pos_to_coord nf (1, target_len-1)
-                            return (0.25*((fst source_first)+(fst source_last)+(fst target_first)+(fst target_last)),-1)
+    | target_len == 0  = do sf <- nf_pos_to_coord nf (0,0)
+                            sl <- nf_pos_to_coord nf (0, source_len-1)
+                            return (0.5*((fst sf)+(fst sl)),-1) 
+    | source_len == 0  = do tf <- nf_pos_to_coord nf (1,0)
+                            tl <- nf_pos_to_coord nf (1, target_len-1)
+                            return (0.5*((fst tf)+(fst tl)),-1)
+    | otherwise        = do sf <- nf_pos_to_coord nf (0,0)
+                            sl <- nf_pos_to_coord nf (0,source_len-1)
+                            tf <- nf_pos_to_coord nf (1,0)
+                            tl <- nf_pos_to_coord nf (1, target_len-1)
+                            return (0.25*((fst sf)+(fst sl)+(fst tf)+(fst tl)),-1)
     where 
         source_len = func_reduced_length $ glob1_source b
         target_len = func_reduced_length $ glob1_target b
@@ -346,11 +353,16 @@ nt_pos_to_named_coord (x,y)= NamedCoordinate $ nt_pos_to_internal_name (x,y)
 -- are being composed vertically, and @y@ will be the maximum number of basic natural
 -- transformations in a horizontal composite.
 nt_max_pos_dimensions :: NaturalTransformation -> (Int, Int)
-nt_max_pos_dimensions (NaturalTransformation _ _ _ _ _) = (1,1)
-nt_max_pos_dimensions (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) = (0,0)
-nt_max_pos_dimensions (NatTransVerticalComposite (OneGlobelet (Functor _ _ _ _) _ ) []) = (0,0)
-nt_max_pos_dimensions (NatTransHorizontalComposite _bg nts) = (0, length $ filter is_basic_nt nts)
-nt_max_pos_dimensions (NatTransVerticalComposite _bg nts) = (length nts, maximum $ map (snd.nt_max_pos_dimensions) nts)
+nt_max_pos_dimensions (NaturalTransformation _ _ _ _ _) 
+    = (1,1)
+nt_max_pos_dimensions (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) 
+    = (0,0)
+nt_max_pos_dimensions (NatTransVerticalComposite (OneGlobelet (Functor _ _ _ _) _ ) []) 
+    = (0,0)
+nt_max_pos_dimensions (NatTransHorizontalComposite _bg nts) 
+    = (0, length $ filter is_basic_nt nts)
+nt_max_pos_dimensions (NatTransVerticalComposite _bg nts) 
+    = (length nts, maximum $ map (snd.nt_max_pos_dimensions) nts)
 
 -- | @(array_of_tikz_nt_nodes nt nf)@ is the array mapping pairs @(x,y)@
 -- to the TikZ node path operation @(nt_nf_pos_to_nt_node nt nf (x,y))@.
@@ -453,7 +465,8 @@ fsd_combinable fsd1 fsd2 = (middle == fsd_tail_position fsd1) && (middle /= Noth
 --  element of the second.
 -- The display string and options are taken from @fsd1@.
 fsd_combine :: FunctorStringData -> FunctorStringData -> FunctorStringData
-fsd_combine (FunctorStringData l1 ds1 op1) (FunctorStringData l2 _ds2 _op2) = FunctorStringData l3 ds1 op1
+fsd_combine (FunctorStringData l1 ds1 op1) (FunctorStringData l2 _ds2 _op2) 
+    = FunctorStringData l3 ds1 op1
     where 
         l3 = l1 ++ (tail l2)
 
@@ -543,18 +556,21 @@ fsds_amalg (x:xs) (y:ys) = case (fsd_tail_position x, fsd_head_position y)
 nt_to_functor_strings :: NaturalTransformation -> OrderedFSDList
 nt_to_functor_strings (NaturalTransformation n d s b o) 
     = nt_to_functor_strings_helper (NaturalTransformation n d s b o) 0 0 0 0 
-nt_to_functor_strings (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) = []
+nt_to_functor_strings (NatTransVerticalComposite (OneGlobelet (CompositeFunctor _ []) (CompositeFunctor _ [])) []) 
+    = []
 nt_to_functor_strings (NatTransVerticalComposite (OneGlobelet (Functor _i d _b o) _ ) []) = [fsd]
     where fsd = FunctorStringData [FunctorElement (0,0), FunctorElement (1,0)] d o
 nt_to_functor_strings (NatTransHorizontalComposite g nats) 
     = nt_to_functor_strings_helper (NatTransHorizontalComposite g nats) 0 0 0 0
 nt_to_functor_strings (NatTransVerticalComposite _bg nts) = foldl fsds_amalg a as
     where
-        (a:as) = zipWith5 nt_to_functor_strings_helper nts [0..((length nts) -1)] (repeat 0) (repeat 0) (repeat 0)
+        (a:as) = zipWith5 nt_to_functor_strings_helper 
+                    nts [0..((length nts) -1)] (repeat 0) (repeat 0) (repeat 0)
 
 -- | A helper function for 'nt_to_functor_strings'.
 nt_to_functor_strings_helper :: NaturalTransformation -> Int -> Int -> Int -> Int -> [FunctorStringData]
-nt_to_functor_strings_helper (NaturalTransformation _n _d _s b _o) row top_offset bot_offset offset= fsds1 ++ fsds2
+nt_to_functor_strings_helper (NaturalTransformation _n _d _s b _o) row top_offset bot_offset offset
+    = fsds1 ++ fsds2
     where 
         source_fun_fsds = func_to_fsds (glob1_source b) row top_offset
         target_fun_fsds = func_to_fsds (glob1_target b) (row+1) bot_offset
@@ -573,10 +589,11 @@ nt_to_functor_strings_helper (NatTransHorizontalComposite _g nats) row top_offse
         toffs = map ((top_offset+).sum) $ inits $ map nat_source_length nats
         boffs = map ((bot_offset+).sum) $ inits $ map nat_target_length nats
         offs = map ((offset+).sum) $ inits $ map (fromEnum.is_basic_nt) nats
-nt_to_functor_strings_helper _ _ _ _ _ = error $ "Error: The function nt_to_functor_strings_helper "
-                                                    ++ "should only be defined for a row of natural transformations, "
-                                                    ++ "i.e. it is only defined for natural transformations of types "
-                                                    ++ "1 through 4 given in the documentation for NatFormatting."
+nt_to_functor_strings_helper _ _ _ _ _ 
+    = error $ "Error: The function nt_to_functor_strings_helper "
+                ++ "should only be defined for a row of natural transformations, "
+                ++ "i.e. it is only defined for natural transformations of types "
+                ++ "1 through 4 given in the documentation for NatFormatting."
 
 -- | 'fsd_get_mid' returns the placement of the midpoint of a list of 'FunctorStringElement's.
 -- Here the length between two consecutive 'FunctorStringElement' in the list is gotten using
@@ -594,7 +611,8 @@ fsd_get_mid loe = fsd_get_mid_helper mid 0 ls
         fsd_get_mid_helper rem_len pos (x:xs) = if rem_len<x 
                                                 then (pos,(fromIntegral rem_len)/(fromIntegral x))
                                                 else fsd_get_mid_helper (rem_len-x) (pos+1) xs
-        fsd_get_mid_helper _ _  [] = error "Error: the midpoint shouldn't be the endpoint or past the endpoint."
+        fsd_get_mid_helper _ _  [] 
+            = error "Error: the midpoint shouldn't be the endpoint or past the endpoint."
 
 -- | 'fsd_lengths' gives the lengths of the segments, and is used in 'fsd_get_mid'.
 -- Segments of the form @NatElement@ -- @FunctorStringElement@
@@ -629,16 +647,16 @@ fe_from_bot_offset nf (x,y) = do (a,b) <- nf_pos_to_coord nf (x,y)
 -- drawing the part of the string between the two points described by the
 -- two 'FunctorStringElement's.
 fse_fse_to_curve_op :: NatFormatting -> FunctorStringElement -> FunctorStringElement -> Maybe TikzPathOperation
-fse_fse_to_curve_op nf (FunctorElement x1) (FunctorElement x2) = do c1 <- fe_from_top_offset nf x1
-                                                                    c2 <- fe_from_bot_offset nf x2
-                                                                    return $ PathOpCurveToTwoControls 
-                                                                                (pos_to_named_coord x2) c1 c2
-fse_fse_to_curve_op nf (FunctorElement x1) (NatElement x2) = do c <- fe_from_top_offset nf x1
-                                                                return $ PathOpCurveToOneControl 
-                                                                            (nt_pos_to_named_coord x2) c
-fse_fse_to_curve_op nf (NatElement _x1) (FunctorElement x2) = do c <- fe_from_bot_offset nf x2
-                                                                 return $ PathOpCurveToOneControl 
-                                                                            (pos_to_named_coord x2) c
+fse_fse_to_curve_op nf (FunctorElement x1) (FunctorElement x2) 
+    = do c1 <- fe_from_top_offset nf x1
+         c2 <- fe_from_bot_offset nf x2
+         return $ PathOpCurveToTwoControls (pos_to_named_coord x2) c1 c2
+fse_fse_to_curve_op nf (FunctorElement x1) (NatElement x2) 
+    = do c <- fe_from_top_offset nf x1
+         return $ PathOpCurveToOneControl (nt_pos_to_named_coord x2) c
+fse_fse_to_curve_op nf (NatElement _x1) (FunctorElement x2) 
+    = do c <- fe_from_bot_offset nf x2
+         return $ PathOpCurveToOneControl (pos_to_named_coord x2) c
 fse_fse_to_curve_op _ _ _ = error $ "Error: The list of FunctorStringElements of a FunctorStringData "
                                     ++ "should not have two consecutive NatElements"
 
@@ -661,7 +679,8 @@ fsd_to_tikz_path_helper (0,pos) nf (fse1:fse2:rest) opt ds = a:b:continuation
         a = fse_fse_to_curve_op nf fse1 fse2
         b = Just $ PathOpRelativeNode ("pos="++(show pos)++",auto,"++opt) ds
         continuation = zipWith (fse_fse_to_curve_op nf) (fse2:rest) rest
-fsd_to_tikz_path_helper (n,pos) nf (fse1:fse2:rest) opt ds = a:fsd_to_tikz_path_helper (n-1,pos) nf (fse2:rest) opt ds
+fsd_to_tikz_path_helper (n,pos) nf (fse1:fse2:rest) opt ds 
+    = a:fsd_to_tikz_path_helper (n-1,pos) nf (fse2:rest) opt ds
     where
         a = fse_fse_to_curve_op nf fse1 fse2
 fsd_to_tikz_path_helper _ _ _ _ _ = error $ "Error. The list of FunctorStringElements of a completed "
