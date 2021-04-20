@@ -1,6 +1,6 @@
 .stack-work/
 *.log
+*.aux
 stack.yaml.lock
 *.swp
-.gitignore
 *~
