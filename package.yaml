@@ -6,6 +6,7 @@ license:             MIT
 author:              "Anthony Wang"
 maintainer:          "anthony.y.wang.math@gmail.com"
 copyright:           "2021 Anthony Wang"
+category:            Math
 
 extra-source-files:
 - README.md

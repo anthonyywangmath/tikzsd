@@ -1,4 +1,5 @@
 .stack-work/
 *.log
 stack.yaml.lock
+*.swp
 *~

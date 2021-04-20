@@ -6,8 +6,9 @@ cabal-version: 1.12
 
 name:           tikzsd
 version:        1.0.0
-synopsis:       A program for generating categorical string diagrams.
+synopsis:       A program for generating LaTeX code of string diagrams.
 description:    Please see the README on GitHub at <https://github.com/anthonyywangmath/tikzsd#readme>
+category:       Math
 homepage:       https://github.com/anthonyywangmath/tikzsd#readme
 bug-reports:    https://github.com/anthonyywangmath/tikzsd/issues
 author:         Anthony Wang
