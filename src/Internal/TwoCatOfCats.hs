@@ -177,7 +177,8 @@ instance Eq Functor where
         where
             helperCompare1 (CompositeFunctor bg1 f1s) (CompositeFunctor bg2 f2s) 
                 = (bg1==bg2) && (length f1s == length f2s) && (foldl (&&) True (zipWith helperCompare2 f1s f2s))
-            helperCompare1 _ _ = error $ "func_to_single_composition should be a CompositeFunctor so this shouldn't be matched."
+            helperCompare1 _ _ = error $ "func_to_single_composition should be "
+                                        ++"a CompositeFunctor so this shouldn't be matched."
             helperCompare2 (Functor i1 _d1 bg1 _o1) (Functor i2 _d2 bg2 _o2) =
                 (i1 == i2) && (bg1 == bg2) 
             helperCompare2 _ _ = error $ "func_to_single_composition should be a CompositeFunctor of basic functors "

@@ -116,9 +116,11 @@ functor_parser = do f_id <- spaces >> id_parser
 nat_trans_parser :: GenParser Char st SDCommand
 nat_trans_parser = do nt_id <- spaces >> id_parser
                       ds <- try (spaces >> disp_string_parser) <|> return ""
-                      source_ids <- spaces >> string "source" >> spaces >> char ':' >> sepBy cell_parser (try $ spaces >> char '&')
+                      source_ids <- spaces >> string "source" >> spaces >> char ':' 
+                                        >> sepBy cell_parser (try $ spaces >> char '&')
                       spaces >> string "\\\\"
-                      target_ids <- spaces >> string "target" >> spaces >> char ':' >> sepBy cell_parser (try $ spaces >> char '&')
+                      target_ids <- spaces >> string "target" >> spaces >> char ':' 
+                                        >> sepBy cell_parser (try $ spaces >> char '&')
                       spaces >> string "\\\\"
                       opts <- try (spaces >> options_parser) <|> return ""
                       shape <- try (spaces >> string "shape" >> spaces >> char ':' >> spaces >> shape_parser) <|> return ""

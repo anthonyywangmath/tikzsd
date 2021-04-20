@@ -49,7 +49,8 @@ class Structure a where
     struct_str :: a->String -- ^ a string saying which type of structure the object is
     sdns_lens :: a -> Lens' SDNamespace (Namespace a) -- ^ A lens for getting the corresponding namespace in an 'SDNamespace'
     insertion_error_msg :: a -> String  -- ^ derived from 'get_id' and 'struct_str'
-    insertion_error_msg s = "The "++(struct_str s) ++" id "++(get_id s)++" is already in the "++(struct_str s) ++" namespace. Skipping."
+    insertion_error_msg s = "The "++(struct_str s) ++" id "++(get_id s)
+                                ++" is already in the "++(struct_str s) ++" namespace. Skipping."
 instance Structure Category where
     get_id = cat_id
     struct_str _ = "category"
@@ -152,13 +153,16 @@ handle_def_fun (DefineFunc f_id ds source_id target_id opts) =
     do source <- runMaybeT $ sdns_lookup source_id category
        target <- runMaybeT $ sdns_lookup target_id category
        case (source, target) of 
-            (Nothing, Nothing) -> return $ (hPutStrLn stderr source_not_found_error) >> (hPutStrLn stderr target_not_found_error)
+            (Nothing, Nothing) -> return $ (hPutStrLn stderr source_not_found_error) 
+                                            >> (hPutStrLn stderr target_not_found_error)
             (Nothing, _)       -> return $ hPutStrLn stderr $ source_not_found_error 
             (_, Nothing)       -> return $ hPutStrLn stderr $ target_not_found_error
             (Just s, Just t)   -> insert_action $ Functor f_id ds (ZeroGlobelet s t) opts
     where 
-        source_not_found_error = "The category " ++ source_id ++ " could not be found.\n\tWhen giving the source in the definition of the functor "++f_id
-        target_not_found_error = "The category " ++ target_id ++ " could not be found.\n\tWhen giving the target in the definition of the functor "++f_id
+        source_not_found_error = "The category " ++ source_id ++ " could not be found.\n\t"
+                                    ++"When giving the source in the definition of the functor "++f_id
+        target_not_found_error = "The category " ++ target_id ++ " could not be found.\n\t"
+                                    ++"When giving the target in the definition of the functor "++f_id
 handle_def_fun _ = error $ "Error! handle_def_fun should only be called by handle_sdc,"
                                 ++ " which should only call handle_def_fun when handling"
                                 ++ " DefineFunc SDCommands"
@@ -184,8 +188,10 @@ handle_def_nat (DefineNat ntid ds source target opts shape) =
                                         ++ ntid ++ " do not have the same source/target."
         source_target_identity_error = concat ["Currently, creating a natural transformation "
                                           ,"whose source and target are both identity functors is not supported, "
-                                          ,"as this will result in a TikZ node for the natural transformation with no in strings and no out strings. "
-                                          ,"\nExplicitly define an identity functor instead, so that there is an in string and an out string"]
+                                          ,"as this will result in a TikZ node for the natural transformation "
+                                          ,"with no in strings and no out strings. "
+                                          ,"\nExplicitly define an identity functor instead, "
+                                          ,"so that there is an in string and an out string"]
 handle_def_nat _ = error $ "Error! handle_def_nat should only be called by handle_sdc,"
                                 ++ " which should only call handle_def_nat when handling"
                                 ++ " DefineNat SDCommands"
@@ -215,7 +221,8 @@ nat_opt_lens = lens get_opts change_opts
 -- | @(sdns_lookup_add str lns1 added lns2)@ looks up @str@ from the 'Namespace' extracted using @lns1@ 
 -- from the 'SDNamespace', then modifies the
 --looked-up object @o@ by adding @","++added@ to the end of @lns2@ of the object @o@.
-sdns_lookup_add :: (Structure a)=> String -> Lens' SDNamespace (Namespace a)-> String -> Lens' a String -> MaybeT (State SDNamespace) a
+sdns_lookup_add :: (Structure a)=> String -> Lens' SDNamespace (Namespace a)-> String -> Lens' a String 
+    -> MaybeT (State SDNamespace) a
 sdns_lookup_add str lns1 "" _ = sdns_lookup str lns1
 sdns_lookup_add str lns1 added lns2 = do obj <- sdns_lookup str lns1
                                          return $ (over lns2 (`mappend` (',':added))) obj
@@ -262,10 +269,13 @@ class Error a where
 data FunctorReadError = LookupFunctorError [(Int,String)] | ComposeFunctorError [(Int,String,Int,String)] 
 
 instance Error FunctorReadError where
-    error_msg (LookupFunctorError places) = "The id(s) " ++ (intercalate ", " $ map lfe_msg_helper places)++" could not be found in either the"
+    error_msg (LookupFunctorError places) = "The id(s) " ++ (intercalate ", " $ map lfe_msg_helper places)
+                                                ++" could not be found in either the"
                                                 ++" functor or category namespaces."
-    error_msg (ComposeFunctorError []) = "Cannot form a composition of an empty list of functors. Categories can be used to denote their identity functors."
-    error_msg (ComposeFunctorError places) = "The functors " ++ (intercalate ", " $ map cfe_msg_helper places)++" cannot be composed."
+    error_msg (ComposeFunctorError []) = "Cannot form a composition of an empty list of functors. "
+                                         ++"Categories can be used to denote their identity functors."
+    error_msg (ComposeFunctorError places) = "The functors " ++ (intercalate ", " $ map cfe_msg_helper places)
+                                                ++" cannot be composed."
 
 -- | A helper function used to define 'error_msg' of a 'LookupFunctorError'
 lfe_msg_helper :: (Int,String) -> String
@@ -297,7 +307,8 @@ list_ce_to_funcs :: [CompElement] -> ExceptT FunctorReadError (State SDNamespace
 list_ce_to_funcs list = let list_with_pos = zip [0..] list
                             (posits, list_ne) = unzip $ filter (\(_x,_y) -> _y /= SDParser.Empty) list_with_pos
                             ids = map ce_id list_ne
-                        in do funcs <- lift $ mapM (\(CompElement cid opts) -> runMaybeT $ sdns_chain_lookup_func cid opts) list_ne
+                        in do funcs <- lift $ mapM (\(CompElement cid opts) -> runMaybeT $ sdns_chain_lookup_func cid opts) 
+                                                list_ne
                               let list_with_pos_id = zip3 posits ids funcs
                               let (lookup_errors,lookup_good) = partition (\(_x,_y,_z) -> isNothing _z) list_with_pos_id
                               case null lookup_errors of 
@@ -319,7 +330,8 @@ compose_funcs list = do comp <- withExcept mExcept $ func_compose_with_error $ m
     where
         mExcept (FuncCompositionError errs) = let lefts = map (\x-> list !! x) errs
                                                   rights = map (\x-> list !! (x+1)) errs
-                                              in ComposeFunctorError $ zipWith (\(x,y,_z)-> (\(a,b,_c)-> (x, y, a, b))) lefts rights
+                                              in ComposeFunctorError $ 
+                                                    zipWith (\(x,y,_z)-> (\(a,b,_c)-> (x, y, a, b))) lefts rights
 
 -- | 'NatTransReadError' is the type of error which can be thrown by 'read_nat_trans'.
 --
@@ -373,21 +385,27 @@ data NatTransReadError = LookupNatTransError Int [(Int, String)]
                        | IncompatibleLinesError Int
 
 instance Error NatTransReadError where
-    error_msg (LookupNatTransError line places) = "On line "++(show line)++" the id(s) "++(intercalate ", " $ map lnte_msg_helper places) 
-                                                     ++" could not be found in the natural transformation, functor or category namespaces."
+    error_msg (LookupNatTransError line places) = "On line "++(show line)++" the id(s) "
+                                                     ++(intercalate ", " $ map lnte_msg_helper places) 
+                                                     ++" could not be found in the natural transformation, "
+                                                     ++"functor or category namespaces."
     error_msg (ImputationError line position) = "On line "++(show line)++", position "++
-                                            (show position)++ " could not be imputed: the target functor of the previous lines"
+                                            (show position)++ " could not be imputed: "
+                                            ++"the target functor of the previous lines"
                                             ++" does not have enough basic functors."
-    error_msg (HorzComposeNatTransError line []) = "On line "++(show line)++", cannot form an empty horizontal composition of natural transformations."
+    error_msg (HorzComposeNatTransError line []) = "On line "++(show line)++", cannot form an empty horizontal composition "
+                                                        ++"of natural transformations."
         -- in the current iteration of the program, I don't think this will ever be matched, as
         -- every parsed SDDrawNat line should be a list of length at least 1.
-    error_msg (HorzComposeNatTransError line places) = "On line "++(show line)++", the natural transformations " ++ (intercalate ", "$ map hcnte_msg_helper places)
+    error_msg (HorzComposeNatTransError line places) = "On line "++(show line)++", the natural transformations " 
+                                                            ++ (intercalate ", "$ map hcnte_msg_helper places)
                                                             ++" cannot be horizontally composed."
     error_msg NoLinesError = "Error: empty natural transformation."
     error_msg FirstLineImputationError = "Cannot impute functors on in a natural transformation without specifying a source."
     error_msg (FRE line fre) = "On line "++(show line)++": "++ error_msg fre
     error_msg (TwoConsecutiveFunctorsError line) = "Error: two consecutive functor lines "++ (show $ line-1)++
-                                                        " and " ++(show line) ++ "in the specification of a natural transformation."
+                                                        " and " ++(show line) 
+                                                        ++ "in the specification of a natural transformation."
     error_msg (IncompatibleLinesError line) = "Line "++(show line)++" is incompatible with the previously specified lines."
 
 -- | A helper function in defining 'error_msg' of a 'LookupNatTransError'.
@@ -442,7 +460,8 @@ horz_compose_nats line list = withExcept mExcept $ nat_horz_compose_with_error $
     where
         mExcept (NatHorzCompositionError errs) = let lefts = map (\x -> list !! x) errs
                                                      rights = map (\x -> list !! (x+1)) errs
-                                                 in HorzComposeNatTransError line $ zipWith3 (\(x,_)-> (\(a,_)-> (\n -> (n,x,n+1,a)))) lefts rights errs
+                                                 in HorzComposeNatTransError line $ zipWith3 
+                                                        (\(x,_)-> (\(a,_)-> (\n -> (n,x,n+1,a)))) lefts rights errs
 
 -- | 'get_first_fff' takes a list of 'SDDrawLine's and returns the source
 -- of the functor they represent along with a 'FunctorFormatting' which is used
@@ -462,7 +481,8 @@ get_first_fff ((SDDrawNat ces):_) = do elems <- list_ce_to_nt ces 0
                                        let ids = map ce_id ces
                                        let (bads,goods) = partition isNothing elems
                                        case null $ bads of 
-                                            True -> do first_nat <- mapExceptT (return.runIdentity) $ horz_compose_nats 0 $ zip ids $ map fromJust goods
+                                            True -> do first_nat <- mapExceptT (return.runIdentity) $ horz_compose_nats 0 $
+                                                                        zip ids $ map fromJust goods
                                                        let f = nat_source first_nat
                                                        return $ (f, default_ff f)
                                             False -> throwError FirstLineImputationError
@@ -496,7 +516,8 @@ get_first_fff ((SDDrawNat ces):_) = do elems <- list_ce_to_nt ces 0
 -- if it is a functor line.
 --
 -- It throws a 'NatTransReadError' if there was an error in processing this line.
-combine_sddl :: Functor -> Bool -> Int -> SDDrawLine -> ExceptT NatTransReadError (State SDNamespace) (Functor,Bool,Int,[NaturalTransformation],[FunctorFormatting])
+combine_sddl :: Functor -> Bool -> Int -> SDDrawLine -> ExceptT NatTransReadError 
+                    (State SDNamespace) (Functor,Bool,Int,[NaturalTransformation],[FunctorFormatting])
 combine_sddl _ True n (SDDrawFun _) = throwError $ TwoConsecutiveFunctorsError n
 combine_sddl fun False n (SDDrawFun ces) = do (f,ff) <- withExceptT (FRE n) $ read_functor_line ces
                                               case f == fun of
@@ -504,11 +525,13 @@ combine_sddl fun False n (SDDrawFun ces) = do (f,ff) <- withExceptT (FRE n) $ re
                                                    False -> throwError $ IncompatibleLinesError n
 combine_sddl fun tf n (SDDrawNat ces) = do elems <- list_ce_to_nt ces n
                                            nats <- mapExceptT (return.runIdentity) $ impute_missing_nat n elems fun
-                                           c_nat <- mapExceptT (return.runIdentity) $ horz_compose_nats n $ zip (map get_id nats) nats
+                                           c_nat <- mapExceptT (return.runIdentity) $ 
+                                                        horz_compose_nats n $ zip (map get_id nats) nats
                                            case nat_source c_nat == fun of 
                                                 True -> case tf of 
                                                              True -> return (nat_target c_nat, False,n+1, [c_nat], [])
-                                                             False -> return (nat_target c_nat, False, n+1,[c_nat], [default_ff $ nat_source c_nat])
+                                                             False -> return (nat_target c_nat, False, n+1,[c_nat], 
+                                                                                [default_ff $ nat_source c_nat])
                                                 False -> throwError $ IncompatibleLinesError n
 
 -- | 'read_nat_trans' takes a list of 'SDDrawLine's and returns a pair @(nt,nf)@
@@ -524,7 +547,8 @@ read_nat_trans sdls = do (f,_) <- get_first_fff sdls
                          return (fromJust $ nat_vert_compose nats, final_ffs)
     where
         helper :: (Functor,Bool,Int,[NaturalTransformation],[FunctorFormatting]) -> SDDrawLine 
-                    -> ExceptT NatTransReadError (State SDNamespace) (Functor,Bool,Int,[NaturalTransformation],[FunctorFormatting])
+                    -> ExceptT NatTransReadError (State SDNamespace) 
+                                (Functor,Bool,Int,[NaturalTransformation],[FunctorFormatting])
         helper (f,b,i,nts,ffs) sddl = do (next_f,next_b, next_i, new_nts, new_ffs) <- combine_sddl f b i sddl
                                          return (next_f,next_b,next_i,nts++new_nts,ffs++new_ffs)
         check_nonempty :: [NaturalTransformation] -> Except NatTransReadError ()
@@ -540,7 +564,8 @@ handle_draw_nat :: SDCommand -> State SDNamespace (IO ())
 handle_draw_nat (DrawNat fn opts ces) = do e_or_nt_nf <- runExceptT $ read_nat_trans ces
                                            case e_or_nt_nf of 
                                                 Left e -> return $ hPutStrLn stderr $ (error_msg e) 
-                                                              ++ "\n\tWhen drawing the natural transformation with output file "++fn
+                                                              ++"\n\tWhen drawing the natural transformation "
+                                                              ++"with output file "++fn
                                                 Right (nt,nf) -> do let tikzsd = make_tikzsd nt nf opts
                                                                     return $ writeFile fn (showLatex tikzsd)
 handle_draw_nat _ = error $ "Error! handle_draw_nat should only be called by handle_sdc,"
