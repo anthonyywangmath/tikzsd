@@ -229,7 +229,7 @@ sdns_lookup_add :: (Structure a)=> String -> Lens' SDNamespace (Namespace a)-> S
 sdns_lookup_add str lns1 "" _ = sdns_lookup str lns1
 sdns_lookup_add str lns1 added lns2 
     = do obj <- sdns_lookup str lns1
-      return $ (over lns2 (`mappend` (',':added))) obj
+         return $ (over lns2 (`mappend` (',':added))) obj
 
 -- | @(sdns_chain_lookup_func id opt)@ attempts to lookup the @id@ in the functor
 -- @Namespace@ and adds the options @opt@ to the options of the looked up functor.
