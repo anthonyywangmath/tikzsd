@@ -44,7 +44,7 @@ actually compose, and prints an error message if it detects something is wrong.
 
 ## Usage
 
-Please check out the [user's manual](doc/user-manual.pdf)
+Please check out the user's manual
 available in the folder `doc/user-manual` for details on how to use the program.
 
 The folder `doc/examples` contains examples of documents whose string diagrams
