@@ -185,7 +185,7 @@ handle_def_nat (DefineNat ntid ds source target opts shape) =
                                Just b  -> insert_action $ NaturalTransformation ntid ds shape b opts
     where
         boundary_not_globelet_error 
-            = "The source and target in the definition of of the natural transformation "
+            = "The source and target in the definition of the natural transformation "
                ++ ntid ++ " do not have the same source/target."
         source_target_identity_error 
             = concat ["Currently, creating a natural transformation "
