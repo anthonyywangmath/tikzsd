@@ -3,7 +3,8 @@
 tikzsd is a Haskell program used to generate
 LaTeX code for string diagrams.
 
-To use the program, one defines categories, functors and natural transformations.
+To use the program, one defines the categories, functors and natural transformations
+to be used, specifying data such as labels and shapes.
 After doing this, one can generate the LaTeX for images such as
 
 ![example diagram 1](images/example-pic-1.png)
@@ -49,13 +50,16 @@ available in the folder `doc/user-manual` for details on how to use the program.
 
 The folder `doc/examples` contains examples of documents whose string diagrams
 were generated with tikzsd, along with all relevant source files.
-Currently, there is a writeup of a proof of the Benabou-Roubaud theorem.
+Currently, there is a writeup of a proof of the Benabou-Roubaud theorem,
+    from which the above two diagrams were taken.
 
 ## Installation
 
-To be expanded upon.
-
-You can clone the repository, then run `stack install` in the cloned repository.
+This is a Haskell project.
+One can clone the repository, then run `stack install` in the cloned repository
+    to compile and install.
+I plan on uploading to hackage,
+    and may create prebuilt binaries in the future.
 
 ## Other
 
