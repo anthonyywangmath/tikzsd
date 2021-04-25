@@ -17,12 +17,12 @@ description:         Please see the README on GitHub at <https://github.com/anth
 
 dependencies:
 - base >= 4.7 && < 5
-- transformers
-- parsec
-- array
-- containers
-- mtl
-- lens
+- transformers >= 0.5.6 && < 0.6
+- parsec >= 3.1.14 && < 3.2
+- array >= 0.5.4 && < 0.6
+- containers >= 0.6.2 && < 0.7
+- mtl >= 2.2.2 && < 2.3
+- lens >= 4.19 && < 5.1
 
 library:
   source-dirs: src

@@ -19,7 +19,21 @@ module SDParser (
 ) where
 
 import Data.Char (isSpace)
-import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec ((<|>), 
+                                      GenParser, 
+                                      try, 
+                                      spaces, 
+                                      endBy, 
+                                      many, 
+                                      char, 
+                                      string, 
+                                      sepBy,
+                                      sepEndBy,
+                                      oneOf,
+                                      satisfy,
+                                      between,
+                                      noneOf,
+                                      alphaNum)
 
 -- | A 'SDCommand' describes a command parsed from the file.
 --

@@ -17,18 +17,23 @@ the 'SDNamespace' state and writing an output file for draw actions.
 module SDNamespace where
 
 import Prelude hiding (Functor)
+import Control.Monad (foldM)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.State.Strict (State, runState, get, put, modify)
+import Control.Monad.Trans.Maybe (MaybeT (..), runMaybeT, maybeToExceptT)
+import Control.Monad.Except (Except, ExceptT, mapExceptT, runExceptT, withExceptT, throwError, withExcept)
+import Control.Applicative ((<$>),(<|>))
+import Control.Lens.Type (Lens')
+import Control.Lens.Getter (view)
+import Control.Lens.Setter (set, over)
+import Control.Lens.Combinators (lens)
+import Control.Lens.Tuple (_1,_2,_3)
 import qualified Data.Map.Strict as Map
-import Control.Monad hiding (Functor)
-import Control.Monad.Trans.Class 
-import Control.Monad.State.Strict hiding (Functor)
-import Control.Monad.Trans.Maybe
-import Control.Monad.Except hiding (Functor)
-import Control.Applicative
-import Control.Lens hiding (Empty)
-import System.IO
-import Data.Maybe (isNothing,fromJust)
+import Data.Functor.Identity (runIdentity)
+import Data.Maybe (isNothing, fromJust)
 import Data.List (partition, intercalate)
 import Data.Either (isLeft)
+import System.IO (stderr, hPutStrLn)
 import TwoCatOfCats
 import SDParser
 import Internal.FormattingData

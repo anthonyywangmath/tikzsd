@@ -19,7 +19,7 @@ In the future, this may allow greater flexibility in how objects are displayed.
 module Internal.TwoCatOfCats where
 
 import Prelude hiding (Functor)
-import Control.Monad.Trans.Except
+import Control.Monad.Trans.Except (Except, throwE)
 
 -- | A representation of a category.
 data Category = Category
@@ -120,7 +120,7 @@ func_composable_errors _ [] = error $ "func_composable_errors should not be call
 func_compose :: [Functor] -> Maybe Functor
 func_compose fs
     | func_composable fs  = let bd = ZeroGlobelet (func_source $ head fs) (func_target $ last fs)
-                                sfs = concat $ map func_to_single_list fs
+                                sfs = foldMap func_to_single_list fs
                                 in Just(CompositeFunctor bd sfs)
     | otherwise           = Nothing
 
@@ -143,7 +143,7 @@ func_compose_with_error :: [Functor] -> Except FuncCompositionError Functor
 func_compose_with_error [] = throwE $ FuncCompositionError []
 func_compose_with_error fs 
     | null errs = let bd = ZeroGlobelet (func_source $ head fs) (func_target $ last fs)
-                      sfs = concat $ map func_to_single_list fs
+                      sfs = foldMap func_to_single_list fs
                       in return $ CompositeFunctor bd sfs
     | otherwise = throwE $ FuncCompositionError errs
     where errs = func_composable_errors 0 fs
@@ -378,8 +378,8 @@ nat_horz_compose_with_error  nats
     | null errs = let pos = nat_pos $ head nats
                       neg = nat_neg $ last nats
                       podes = ZeroGlobelet pos neg
-                      bd_north = CompositeFunctor podes $ concat $ map (func_to_single_list.nat_source) nats
-                      bd_south = CompositeFunctor podes $ concat $ map (func_to_single_list.nat_target) nats
+                      bd_north = CompositeFunctor podes $ foldMap (func_to_single_list.nat_source) nats
+                      bd_south = CompositeFunctor podes $ foldMap (func_to_single_list.nat_target) nats
                       bd = OneGlobelet bd_north bd_south
                       in return (NatTransHorizontalComposite bd nats)
     | otherwise = throwE $ NatHorzCompositionError errs
@@ -418,7 +418,7 @@ nat_target_length = func_reduced_length . nat_target
 -- | 'is_basic_nt' of a natural transformation is @True@ if the natural transformation is a
 -- basic natural transformation, and false otherwise.
 is_basic_nt :: NaturalTransformation -> Bool
-is_basic_nt (NaturalTransformation _ _ _ _ _) = True
+is_basic_nt (NaturalTransformation {}) = True
 is_basic_nt _ = False
 
 -- | 'is_identity_nt' of a natural transformation is @True@ if the natural transformation

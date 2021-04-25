@@ -12,8 +12,8 @@ Maintainer  : anthony.y.wang.math@gmail.com
 module Internal.FormattingData where
 
 import Prelude hiding (Functor)
-import Data.Array
-import Data.List
+import Data.Array (Array, array, range)
+import Data.List (intercalate, zipWith5, inits)
 import Data.Maybe (catMaybes)
 import Internal.TwoCatOfCats
 import TikzObjects
