@@ -277,7 +277,8 @@ class Error a where
 -- composition.
 -- Otherwise, it is a list of 4-tuples @(n1,id1,n2,id2)@ where @n1@ is the position of @id1@
 -- and @n2@ is the position of @id2@, and the functors specified by @id1@ and @id2@ do not compose.
-data FunctorReadError = LookupFunctorError [(Int,String)] | ComposeFunctorError [(Int,String,Int,String)] 
+data FunctorReadError = LookupFunctorError [(Int,String)] 
+                      | ComposeFunctorError [(Int,String,Int,String)] 
 
 instance Error FunctorReadError where
     error_msg (LookupFunctorError places) 
