@@ -58,8 +58,7 @@ Currently, there is a writeup of a proof of the Benabou-Roubaud theorem,
 This is a Haskell project.
 One can clone the repository, then run `stack install` in the cloned repository
     to compile and install.
-I plan on uploading to hackage,
-    and may create prebuilt binaries in the future.
+The program is available on Hackage.
 
 ## Other
 
